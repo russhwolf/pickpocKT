@@ -1,0 +1,4 @@
+subprojects {
+    group = 'io.intrepid.pickpocket'
+    version = 1.0
+}

@@ -3,8 +3,19 @@ apply plugin: 'konan'
 konan.targets = ['ios_arm64', 'ios_x64', 'macos']
 
 konanArtifacts {
-    framework('Shared', targets: ['ios_arm64', 'ios_x64']) {
+    framework('Shared_ios_arm64', targets: ['ios_arm64']) {
         enableMultiplatform true
+        artifactName 'Shared'
+        dependencies {
+
+        }
+    }
+    framework('Shared_ios_x64', targets: ['ios_x64']) {
+        enableMultiplatform true
+        artifactName 'Shared'
+        dependencies {
+
+        }
     }
 
     library('shared-lib', targets: ['macos']) {

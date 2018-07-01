@@ -1,10 +1,14 @@
 package io.intrepid.pickpocket
 
+interface Guessable {
+    fun submitGuess(guess: String): GuessResult
+}
+
 /**
  * This is the Lock class which will hold a secret code and return [GuessResult] responses when guesses are made.
  */
-class Lock(private val code: String) {
-    fun submitGuess(guess: String): GuessResult {
+class Lock(private val code: String) : Guessable {
+    override fun submitGuess(guess: String): GuessResult {
         val numCorrect = numCorrect(guess, code)
         val numMisplaced = totalMatches(guess, code) - numCorrect
         return GuessResult(numCorrect, numMisplaced)
