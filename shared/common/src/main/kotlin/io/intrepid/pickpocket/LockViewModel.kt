@@ -5,20 +5,23 @@ import kotlin.properties.Delegates
 private const val DIGITS = 6
 private const val CODE_LENGTH = 3
 
-class LockViewModel(private val guessableProvider: GuessableProvider = LockProvider(), private var listener: ViewState.Listener? = null) {
+class LockViewModel(
+    private val guessableProvider: GuessableProvider = LockProvider(),
+    private var listener: ViewStateListener? = null
+) {
     private var lock: Guessable? = null
 
     private var state: ViewState by Delegates.observable(ViewState()) { _, _, newValue ->
-        listener?.onStateChanged(newValue)
+        listener?.invoke(newValue)
     }
 
     init {
-        listener?.onStateChanged(state)
+        listener?.invoke(state)
     }
 
-    fun setListener(listener: ViewState.Listener?) {
+    fun setListener(listener: ViewStateListener?) {
         this.listener = listener
-        listener?.onStateChanged(state)
+        listener?.invoke(state)
     }
 
     fun reset() {
@@ -34,8 +37,8 @@ class LockViewModel(private val guessableProvider: GuessableProvider = LockProvi
         }
     }
 
-    fun input(char: Char) {
-        val guess = state.guess + char
+    fun input(character: Char) {
+        val guess = state.guess + character
         if (guess.length == CODE_LENGTH) {
             processGuess(guess)
         } else {
@@ -72,9 +75,8 @@ data class ViewState(
         )
     }
 
-    interface Listener {
-        fun onStateChanged(state: ViewState)
-    }
 }
+
+typealias ViewStateListener = (ViewState) -> Unit
 
 data class GuessListItem(val guess: String, val numCorrect: Int, val numMisplaced: Int)

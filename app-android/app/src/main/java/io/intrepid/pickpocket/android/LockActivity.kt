@@ -118,11 +118,7 @@ class LockArchViewModel : ViewModel() {
     val state: LiveData<ViewState> get() = mutableState
 
     init {
-        lockViewModel.setListener(object : ViewState.Listener {
-            override fun onStateChanged(state: ViewState) {
-                mutableState.value = state
-            }
-        })
+        lockViewModel.setListener { mutableState.value = it }
     }
 
     override fun onCleared() {

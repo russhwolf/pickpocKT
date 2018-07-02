@@ -21,28 +21,28 @@ private val STATE_STARTED = ViewState(
 class LockViewModelTest {
 
     private lateinit var mockGuessableProvider: MockGuessableProvider
-    private lateinit var mockStateListener: MockStateListener
+    private lateinit var mockViewStateListener: MockViewStateListener
 
     private lateinit var viewModel: LockViewModel
 
     @BeforeTest
     fun setup() {
         mockGuessableProvider = MockGuessableProvider()
-        mockStateListener = MockStateListener()
+        mockViewStateListener = MockViewStateListener()
 
-        viewModel = LockViewModel(mockGuessableProvider, mockStateListener)
+        viewModel = LockViewModel(mockGuessableProvider, mockViewStateListener)
     }
 
     @Test
     fun `initial state`() {
-        mockStateListener.expect(STATE_INITIAL)
+        mockViewStateListener.expect(STATE_INITIAL)
     }
 
     @Test
     fun `start game`() {
         viewModel.reset()
 
-        mockStateListener.expect(STATE_STARTED)
+        mockViewStateListener.expect(STATE_STARTED)
     }
 
     @Test
@@ -50,7 +50,7 @@ class LockViewModelTest {
         viewModel.reset()
         viewModel.input('3')
 
-        mockStateListener.expect(
+        mockViewStateListener.expect(
             ViewState(
                 guess = "3",
                 results = listOf(),
@@ -69,7 +69,7 @@ class LockViewModelTest {
         viewModel.input('2')
         viewModel.input('4')
 
-        mockStateListener.expect(
+        mockViewStateListener.expect(
             ViewState(
                 guess = "",
                 results = listOf(
@@ -102,7 +102,7 @@ class LockViewModelTest {
         viewModel.input('2')
         viewModel.input('3')
 
-        mockStateListener.expect(
+        mockViewStateListener.expect(
             ViewState(
                 guess = "",
                 results = listOf(
@@ -134,7 +134,7 @@ class LockViewModelTest {
         viewModel.input('3')
         viewModel.reset()
 
-        mockStateListener.expect(STATE_INITIAL)
+        mockViewStateListener.expect(STATE_INITIAL)
     }
 
     @Test
@@ -146,24 +146,24 @@ class LockViewModelTest {
         viewModel.input('3')
         viewModel.reset()
 
-        mockStateListener.expect(STATE_INITIAL)
+        mockViewStateListener.expect(STATE_INITIAL)
     }
 
     @Test
     fun `set new listener`() {
-        val mockStateListener2 = MockStateListener()
+        val mockStateListener2 = MockViewStateListener()
 
-        mockStateListener.expect(STATE_INITIAL)
+        mockViewStateListener.expect(STATE_INITIAL)
         mockStateListener2.expect(null)
 
         viewModel.setListener(mockStateListener2)
 
-        mockStateListener.expect(STATE_INITIAL)
+        mockViewStateListener.expect(STATE_INITIAL)
         mockStateListener2.expect(STATE_INITIAL)
 
         viewModel.reset()
 
-        mockStateListener.expect(STATE_INITIAL)
+        mockViewStateListener.expect(STATE_INITIAL)
         mockStateListener2.expect(STATE_STARTED)
     }
 }
@@ -180,11 +180,11 @@ private class MockGuessableProvider : GuessableProvider {
     }
 }
 
-private class MockStateListener : ViewState.Listener {
+private class MockViewStateListener : ViewStateListener {
 
     private var state: ViewState? = null
 
-    override fun onStateChanged(state: ViewState) {
+    override fun invoke(state: ViewState) {
         this.state = state
     }
 
