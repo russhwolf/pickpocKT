@@ -64,12 +64,12 @@ class LockActivity : AppCompatActivity() {
     protected fun onButtonClick(button: Button) {
         viewModel.lockViewModel.input(
             when (button.id) {
-                R.id.button_1 -> '1'
-                R.id.button_2 -> '2'
-                R.id.button_3 -> '3'
-                R.id.button_4 -> '4'
-                R.id.button_5 -> '5'
-                R.id.button_6 -> '6'
+                R.id.button_1 -> "1"
+                R.id.button_2 -> "2"
+                R.id.button_3 -> "3"
+                R.id.button_4 -> "4"
+                R.id.button_5 -> "5"
+                R.id.button_6 -> "6"
                 else -> throw IllegalArgumentException("Invalid id ${button.id}")
             }
         )

@@ -48,7 +48,7 @@ class LockViewModelTest {
     @Test
     fun `incomplete guess`() {
         viewModel.reset()
-        viewModel.input('3')
+        viewModel.input("3")
 
         mockViewStateListener.expect(
             ViewState(
@@ -65,9 +65,9 @@ class LockViewModelTest {
         mockGuessableProvider.setNextResult(GuessResult(numCorrect = 1, numMisplaced = 1))
 
         viewModel.reset()
-        viewModel.input('3')
-        viewModel.input('2')
-        viewModel.input('4')
+        viewModel.input("3")
+        viewModel.input("2")
+        viewModel.input("4")
 
         mockViewStateListener.expect(
             ViewState(
@@ -90,17 +90,17 @@ class LockViewModelTest {
     fun `correct guess`() {
         viewModel.reset()
         mockGuessableProvider.setNextResult(GuessResult(numCorrect = 1, numMisplaced = 1))
-        viewModel.input('3')
-        viewModel.input('2')
-        viewModel.input('4')
+        viewModel.input("3")
+        viewModel.input("2")
+        viewModel.input("4")
         mockGuessableProvider.setNextResult(GuessResult(numCorrect = 0, numMisplaced = 2))
-        viewModel.input('3')
-        viewModel.input('1')
-        viewModel.input('4')
+        viewModel.input("3")
+        viewModel.input("1")
+        viewModel.input("4")
         mockGuessableProvider.setNextResult(GuessResult(numCorrect = 3, numMisplaced = 0))
-        viewModel.input('1')
-        viewModel.input('2')
-        viewModel.input('3')
+        viewModel.input("1")
+        viewModel.input("2")
+        viewModel.input("3")
 
         mockViewStateListener.expect(
             ViewState(
@@ -131,7 +131,7 @@ class LockViewModelTest {
     @Test
     fun `reset mid-game`() {
         viewModel.reset()
-        viewModel.input('3')
+        viewModel.input("3")
         viewModel.reset()
 
         mockViewStateListener.expect(STATE_INITIAL)
@@ -141,9 +141,9 @@ class LockViewModelTest {
     fun `reset post-game`() {
         mockGuessableProvider.setNextResult(GuessResult(numCorrect = 3, numMisplaced = 0))
         viewModel.reset()
-        viewModel.input('1')
-        viewModel.input('2')
-        viewModel.input('3')
+        viewModel.input("1")
+        viewModel.input("2")
+        viewModel.input("3")
         viewModel.reset()
 
         mockViewStateListener.expect(STATE_INITIAL)

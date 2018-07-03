@@ -37,8 +37,8 @@ class LockViewModel(
         }
     }
 
-    fun input(character: Char) {
-        val guess = state.guess + character
+    fun input(character: String) {
+        val guess = state.guess + character[0]
         if (guess.length == CODE_LENGTH) {
             processGuess(guess)
         } else {
