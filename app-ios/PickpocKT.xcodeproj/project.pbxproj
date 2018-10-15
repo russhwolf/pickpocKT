@@ -14,11 +14,9 @@
 		46E7E31720E9A6620041145B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 46E7E31520E9A6620041145B /* LaunchScreen.storyboard */; };
 		46E7E32220E9A6620041145B /* app_iosTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E7E32120E9A6620041145B /* app_iosTests.swift */; };
 		46E7E32D20E9A6620041145B /* app_iosUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E7E32C20E9A6620041145B /* app_iosUITests.swift */; };
-		46E7E34820E9A6B20041145B /* Shared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46E7E33F20E9A6B10041145B /* Shared.framework */; };
-		46E7E34F20E9A6B20041145B /* SharedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E7E34E20E9A6B20041145B /* SharedTests.swift */; };
-		46E7E35420E9A6B20041145B /* Shared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46E7E33F20E9A6B10041145B /* Shared.framework */; };
-		46E7E35520E9A6B20041145B /* Shared.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 46E7E33F20E9A6B10041145B /* Shared.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		46E7E37C20E9B1F20041145B /* GuessListCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 46E7E37B20E9B1F20041145B /* GuessListCell.xib */; };
+		C779E50C2175239400D95BC3 /* shared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C779E50B2175239400D95BC3 /* shared.framework */; };
+		C779E50D2175239400D95BC3 /* shared.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C779E50B2175239400D95BC3 /* shared.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,27 +34,6 @@
 			remoteGlobalIDString = 46E7E30820E9A6600041145B;
 			remoteInfo = "app-ios";
 		};
-		46E7E34920E9A6B20041145B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 46E7E30120E9A6600041145B /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 46E7E33E20E9A6B10041145B;
-			remoteInfo = Shared;
-		};
-		46E7E34B20E9A6B20041145B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 46E7E30120E9A6600041145B /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 46E7E30820E9A6600041145B;
-			remoteInfo = "app-ios";
-		};
-		46E7E35220E9A6B20041145B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 46E7E30120E9A6600041145B /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 46E7E33E20E9A6B10041145B;
-			remoteInfo = Shared;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -66,7 +43,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				46E7E35520E9A6B20041145B /* Shared.framework in Embed Frameworks */,
+				C779E50D2175239400D95BC3 /* shared.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -87,19 +64,8 @@
 		46E7E32820E9A6620041145B /* PickpocKTUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PickpocKTUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		46E7E32C20E9A6620041145B /* app_iosUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = app_iosUITests.swift; sourceTree = "<group>"; };
 		46E7E32E20E9A6620041145B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		46E7E33F20E9A6B10041145B /* Shared.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Shared.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		46E7E34120E9A6B10041145B /* Shared.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Shared.h; sourceTree = "<group>"; };
-		46E7E34220E9A6B20041145B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		46E7E34720E9A6B20041145B /* SharedTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SharedTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		46E7E34E20E9A6B20041145B /* SharedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedTests.swift; sourceTree = "<group>"; };
-		46E7E35020E9A6B20041145B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		46E7E36820E9A7D00041145B /* Random.kt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Random.kt; sourceTree = "<group>"; };
-		46E7E37020E9A7E00041145B /* LockTest.kt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LockTest.kt; sourceTree = "<group>"; };
-		46E7E37120E9A7E00041145B /* LockViewModelTest.kt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LockViewModelTest.kt; sourceTree = "<group>"; };
-		46E7E37820E9A7E00041145B /* Lock.kt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Lock.kt; sourceTree = "<group>"; };
-		46E7E37920E9A7E00041145B /* LockViewModel.kt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LockViewModel.kt; sourceTree = "<group>"; };
-		46E7E37A20E9A7E00041145B /* GuessableProvider.kt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GuessableProvider.kt; sourceTree = "<group>"; };
 		46E7E37B20E9B1F20041145B /* GuessListCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GuessListCell.xib; sourceTree = "<group>"; };
+		C779E50B2175239400D95BC3 /* shared.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = shared.framework; path = "../shared/build/xcode-frameworks/shared.framework"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,7 +73,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				46E7E35420E9A6B20041145B /* Shared.framework in Frameworks */,
+				C779E50C2175239400D95BC3 /* shared.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -125,25 +91,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		46E7E34420E9A6B20041145B /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				46E7E34820E9A6B20041145B /* Shared.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		46E7E30020E9A6600041145B = {
 			isa = PBXGroup;
 			children = (
+				C779E50B2175239400D95BC3 /* shared.framework */,
 				46E7E30B20E9A6600041145B /* PickpocKT */,
 				46E7E32020E9A6620041145B /* PickpocKTTests */,
 				46E7E32B20E9A6620041145B /* PickPocKTUITests */,
-				46E7E34020E9A6B10041145B /* Shared */,
-				46E7E34D20E9A6B20041145B /* SharedTests */,
 				46E7E30A20E9A6600041145B /* Products */,
 			);
 			sourceTree = "<group>";
@@ -154,8 +111,6 @@
 				46E7E30920E9A6600041145B /* PickpocKT.app */,
 				46E7E31D20E9A6620041145B /* PickpocKTTests.xctest */,
 				46E7E32820E9A6620041145B /* PickpocKTUITests.xctest */,
-				46E7E33F20E9A6B10041145B /* Shared.framework */,
-				46E7E34720E9A6B20041145B /* SharedTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -192,216 +147,6 @@
 			path = PickPocKTUITests;
 			sourceTree = "<group>";
 		};
-		46E7E34020E9A6B10041145B /* Shared */ = {
-			isa = PBXGroup;
-			children = (
-				46E7E35E20E9A7D00041145B /* src */,
-				46E7E36920E9A7E00041145B /* src */,
-				46E7E34120E9A6B10041145B /* Shared.h */,
-				46E7E34220E9A6B20041145B /* Info.plist */,
-			);
-			path = Shared;
-			sourceTree = "<group>";
-		};
-		46E7E34D20E9A6B20041145B /* SharedTests */ = {
-			isa = PBXGroup;
-			children = (
-				46E7E34E20E9A6B20041145B /* SharedTests.swift */,
-				46E7E35020E9A6B20041145B /* Info.plist */,
-			);
-			path = SharedTests;
-			sourceTree = "<group>";
-		};
-		46E7E35E20E9A7D00041145B /* src */ = {
-			isa = PBXGroup;
-			children = (
-				46E7E35F20E9A7D00041145B /* test */,
-				46E7E36220E9A7D00041145B /* main */,
-			);
-			name = src;
-			path = ../../shared/ios/src;
-			sourceTree = "<group>";
-		};
-		46E7E35F20E9A7D00041145B /* test */ = {
-			isa = PBXGroup;
-			children = (
-				46E7E36020E9A7D00041145B /* resources */,
-				46E7E36120E9A7D00041145B /* kotlin */,
-			);
-			path = test;
-			sourceTree = "<group>";
-		};
-		46E7E36020E9A7D00041145B /* resources */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = resources;
-			sourceTree = "<group>";
-		};
-		46E7E36120E9A7D00041145B /* kotlin */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = kotlin;
-			sourceTree = "<group>";
-		};
-		46E7E36220E9A7D00041145B /* main */ = {
-			isa = PBXGroup;
-			children = (
-				46E7E36320E9A7D00041145B /* resources */,
-				46E7E36420E9A7D00041145B /* kotlin */,
-			);
-			path = main;
-			sourceTree = "<group>";
-		};
-		46E7E36320E9A7D00041145B /* resources */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = resources;
-			sourceTree = "<group>";
-		};
-		46E7E36420E9A7D00041145B /* kotlin */ = {
-			isa = PBXGroup;
-			children = (
-				46E7E36520E9A7D00041145B /* io */,
-			);
-			path = kotlin;
-			sourceTree = "<group>";
-		};
-		46E7E36520E9A7D00041145B /* io */ = {
-			isa = PBXGroup;
-			children = (
-				46E7E36620E9A7D00041145B /* intrepid */,
-			);
-			path = io;
-			sourceTree = "<group>";
-		};
-		46E7E36620E9A7D00041145B /* intrepid */ = {
-			isa = PBXGroup;
-			children = (
-				46E7E36720E9A7D00041145B /* pickpocket */,
-			);
-			path = intrepid;
-			sourceTree = "<group>";
-		};
-		46E7E36720E9A7D00041145B /* pickpocket */ = {
-			isa = PBXGroup;
-			children = (
-				46E7E36820E9A7D00041145B /* Random.kt */,
-			);
-			path = pickpocket;
-			sourceTree = "<group>";
-		};
-		46E7E36920E9A7E00041145B /* src */ = {
-			isa = PBXGroup;
-			children = (
-				46E7E36A20E9A7E00041145B /* test */,
-				46E7E37220E9A7E00041145B /* main */,
-			);
-			name = src;
-			path = ../../shared/common/src;
-			sourceTree = "<group>";
-		};
-		46E7E36A20E9A7E00041145B /* test */ = {
-			isa = PBXGroup;
-			children = (
-				46E7E36B20E9A7E00041145B /* resources */,
-				46E7E36C20E9A7E00041145B /* kotlin */,
-			);
-			path = test;
-			sourceTree = "<group>";
-		};
-		46E7E36B20E9A7E00041145B /* resources */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = resources;
-			sourceTree = "<group>";
-		};
-		46E7E36C20E9A7E00041145B /* kotlin */ = {
-			isa = PBXGroup;
-			children = (
-				46E7E36D20E9A7E00041145B /* io */,
-			);
-			path = kotlin;
-			sourceTree = "<group>";
-		};
-		46E7E36D20E9A7E00041145B /* io */ = {
-			isa = PBXGroup;
-			children = (
-				46E7E36E20E9A7E00041145B /* intrepid */,
-			);
-			path = io;
-			sourceTree = "<group>";
-		};
-		46E7E36E20E9A7E00041145B /* intrepid */ = {
-			isa = PBXGroup;
-			children = (
-				46E7E36F20E9A7E00041145B /* pickpocket */,
-			);
-			path = intrepid;
-			sourceTree = "<group>";
-		};
-		46E7E36F20E9A7E00041145B /* pickpocket */ = {
-			isa = PBXGroup;
-			children = (
-				46E7E37020E9A7E00041145B /* LockTest.kt */,
-				46E7E37120E9A7E00041145B /* LockViewModelTest.kt */,
-			);
-			path = pickpocket;
-			sourceTree = "<group>";
-		};
-		46E7E37220E9A7E00041145B /* main */ = {
-			isa = PBXGroup;
-			children = (
-				46E7E37320E9A7E00041145B /* resources */,
-				46E7E37420E9A7E00041145B /* kotlin */,
-			);
-			path = main;
-			sourceTree = "<group>";
-		};
-		46E7E37320E9A7E00041145B /* resources */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = resources;
-			sourceTree = "<group>";
-		};
-		46E7E37420E9A7E00041145B /* kotlin */ = {
-			isa = PBXGroup;
-			children = (
-				46E7E37520E9A7E00041145B /* io */,
-			);
-			path = kotlin;
-			sourceTree = "<group>";
-		};
-		46E7E37520E9A7E00041145B /* io */ = {
-			isa = PBXGroup;
-			children = (
-				46E7E37620E9A7E00041145B /* intrepid */,
-			);
-			path = io;
-			sourceTree = "<group>";
-		};
-		46E7E37620E9A7E00041145B /* intrepid */ = {
-			isa = PBXGroup;
-			children = (
-				46E7E37720E9A7E00041145B /* pickpocket */,
-			);
-			path = intrepid;
-			sourceTree = "<group>";
-		};
-		46E7E37720E9A7E00041145B /* pickpocket */ = {
-			isa = PBXGroup;
-			children = (
-				46E7E37820E9A7E00041145B /* Lock.kt */,
-				46E7E37920E9A7E00041145B /* LockViewModel.kt */,
-				46E7E37A20E9A7E00041145B /* GuessableProvider.kt */,
-			);
-			path = pickpocket;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -409,6 +154,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 46E7E33120E9A6620041145B /* Build configuration list for PBXNativeTarget "PickpocKT" */;
 			buildPhases = (
+				C779E50E2175242B00D95BC3 /* Build Kotlin Shared Module */,
 				46E7E30520E9A6600041145B /* Sources */,
 				46E7E30620E9A6600041145B /* Frameworks */,
 				46E7E30720E9A6600041145B /* Resources */,
@@ -417,7 +163,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				46E7E35320E9A6B20041145B /* PBXTargetDependency */,
 			);
 			name = PickpocKT;
 			productName = "app-ios";
@@ -460,40 +205,6 @@
 			productReference = 46E7E32820E9A6620041145B /* PickpocKTUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
-		46E7E33E20E9A6B10041145B /* Shared */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 46E7E35620E9A6B20041145B /* Build configuration list for PBXNativeTarget "Shared" */;
-			buildPhases = (
-				46E7E35D20E9A7940041145B /* ShellScript */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = Shared;
-			productName = Shared;
-			productReference = 46E7E33F20E9A6B10041145B /* Shared.framework */;
-			productType = "com.apple.product-type.framework";
-		};
-		46E7E34620E9A6B20041145B /* SharedTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 46E7E35A20E9A6B20041145B /* Build configuration list for PBXNativeTarget "SharedTests" */;
-			buildPhases = (
-				46E7E34320E9A6B20041145B /* Sources */,
-				46E7E34420E9A6B20041145B /* Frameworks */,
-				46E7E34520E9A6B20041145B /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				46E7E34A20E9A6B20041145B /* PBXTargetDependency */,
-				46E7E34C20E9A6B20041145B /* PBXTargetDependency */,
-			);
-			name = SharedTests;
-			productName = SharedTests;
-			productReference = 46E7E34720E9A6B20041145B /* SharedTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -515,13 +226,6 @@
 						CreatedOnToolsVersion = 9.4;
 						TestTargetID = 46E7E30820E9A6600041145B;
 					};
-					46E7E33E20E9A6B10041145B = {
-						CreatedOnToolsVersion = 9.4;
-					};
-					46E7E34620E9A6B20041145B = {
-						CreatedOnToolsVersion = 9.4;
-						TestTargetID = 46E7E30820E9A6600041145B;
-					};
 				};
 			};
 			buildConfigurationList = 46E7E30420E9A6600041145B /* Build configuration list for PBXProject "PickpocKT" */;
@@ -540,8 +244,6 @@
 				46E7E30820E9A6600041145B /* PickpocKT */,
 				46E7E31C20E9A6620041145B /* PickpocKTTests */,
 				46E7E32720E9A6620041145B /* PickpocKTUITests */,
-				46E7E33E20E9A6B10041145B /* Shared */,
-				46E7E34620E9A6B20041145B /* SharedTests */,
 			);
 		};
 /* End PBXProject section */
@@ -572,28 +274,26 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		46E7E34520E9A6B20041145B /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		46E7E35D20E9A7940041145B /* ShellScript */ = {
+		C779E50E2175242B00D95BC3 /* Build Kotlin Shared Module */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
+			inputFileListPaths = (
+			);
 			inputPaths = (
+			);
+			name = "Build Kotlin Shared Module";
+			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"$SRCROOT/../gradlew\" -p \"$SRCROOT/../shared/ios\" \"$KONAN_TASK\" \\\n-Pkonan.configuration.build.dir=\"$CONFIGURATION_BUILD_DIR\"        \\\n-Pkonan.debugging.symbols=\"$DEBUGGING_SYMBOLS\"                    \\\n-Pkonan.optimizations.enable=\"$KONAN_ENABLE_OPTIMIZATIONS\"";
+			shellScript = "cd \"$SRCROOT/../shared/build/xcode-frameworks\"\n./gradlew :shared:packForXCode\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -623,14 +323,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		46E7E34320E9A6B20041145B /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				46E7E34F20E9A6B20041145B /* SharedTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -643,21 +335,6 @@
 			isa = PBXTargetDependency;
 			target = 46E7E30820E9A6600041145B /* PickpocKT */;
 			targetProxy = 46E7E32920E9A6620041145B /* PBXContainerItemProxy */;
-		};
-		46E7E34A20E9A6B20041145B /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 46E7E33E20E9A6B10041145B /* Shared */;
-			targetProxy = 46E7E34920E9A6B20041145B /* PBXContainerItemProxy */;
-		};
-		46E7E34C20E9A6B20041145B /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 46E7E30820E9A6600041145B /* PickpocKT */;
-			targetProxy = 46E7E34B20E9A6B20041145B /* PBXContainerItemProxy */;
-		};
-		46E7E35320E9A6B20041145B /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 46E7E33E20E9A6B10041145B /* Shared */;
-			targetProxy = 46E7E35220E9A6B20041145B /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -801,6 +478,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = H6334Z65AH;
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../../SharedCode/build/xcode-frameworks";
 				INFOPLIST_FILE = "$(SRCROOT)/PickpocKT/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -819,6 +498,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = H6334Z65AH;
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../../SharedCode/build/xcode-frameworks";
 				INFOPLIST_FILE = "$(SRCROOT)/PickpocKT/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -913,111 +594,6 @@
 			};
 			name = Release;
 		};
-		46E7E35720E9A6B20041145B /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = QDQ7CWKQQ6;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = Shared/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				KONAN_ENABLE_OPTIMIZATIONS = NO;
-				KONAN_TASK = "";
-				"KONAN_TASK[sdk=iphoneos*]" = compileKonanShared_ios_arm64Ios_arm64;
-				"KONAN_TASK[sdk=iphonesimulator*]" = compileKonanShared_ios_x64Ios_x64;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.intrepid.Shared;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		46E7E35820E9A6B20041145B /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = QDQ7CWKQQ6;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = Shared/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				KONAN_ENABLE_OPTIMIZATIONS = YES;
-				"KONAN_ENABLE_OPTIMIZATIONS[arch=*]" = "";
-				KONAN_TASK = "";
-				"KONAN_TASK[sdk=iphoneos*]" = compileKonanShared_ios_arm64Ios_arm64;
-				"KONAN_TASK[sdk=iphonesimulator*]" = compileKonanShared_ios_x64Ios_x64;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.intrepid.Shared;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		46E7E35B20E9A6B20041145B /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = QDQ7CWKQQ6;
-				INFOPLIST_FILE = SharedTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.intrepid.SharedTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PickpocKT.app/PickpocKT";
-			};
-			name = Debug;
-		};
-		46E7E35C20E9A6B20041145B /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = QDQ7CWKQQ6;
-				INFOPLIST_FILE = SharedTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.intrepid.SharedTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PickpocKT.app/PickpocKT";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1053,24 +629,6 @@
 			buildConfigurations = (
 				46E7E33820E9A6620041145B /* Debug */,
 				46E7E33920E9A6620041145B /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		46E7E35620E9A6B20041145B /* Build configuration list for PBXNativeTarget "Shared" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				46E7E35720E9A6B20041145B /* Debug */,
-				46E7E35820E9A6B20041145B /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		46E7E35A20E9A6B20041145B /* Build configuration list for PBXNativeTarget "SharedTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				46E7E35B20E9A6B20041145B /* Debug */,
-				46E7E35C20E9A6B20041145B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

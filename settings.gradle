@@ -13,4 +13,4 @@ pluginManagement {
 }
 rootProject.name = 'PickpocKT'
 
-include 'shared', 'shared:common', 'shared:android', 'shared:ios'
+include ':shared'

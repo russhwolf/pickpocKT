@@ -184,8 +184,8 @@ private class MockViewStateListener : ViewStateListener {
 
     private var state: ViewState? = null
 
-    override fun invoke(state: ViewState) {
-        this.state = state
+    override fun invoke(p1: ViewState) {
+        this.state = p1
     }
 
     fun expect(expectedState: ViewState?) {

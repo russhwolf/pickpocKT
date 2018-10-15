@@ -1,4 +1,84 @@
-subprojects {
-    group = 'io.intrepid.pickpocket'
-    version = 1.0
+apply plugin: 'kotlin-multiplatform'
+apply plugin: 'com.android.library'
+
+group = 'io.intrepid.pickpocket'
+version = 1.0
+
+kotlin {
+    targets {
+        final def iosTarget = System.getenv('SDK_NAME')?.startsWith("iphoneos") ? presets.iosArm64 : presets.iosX64
+
+        fromPreset(iosTarget, 'ios') {
+            compilations.main.outputKinds('FRAMEWORK')
+        }
+
+        fromPreset(presets.android, 'android')
+    }
+
+    sourceSets {
+        commonMain.dependencies {
+            api 'org.jetbrains.kotlin:kotlin-stdlib-common'
+        }
+        commonTest.dependencies {
+            implementation 'org.jetbrains.kotlin:kotlin-test'
+        }
+
+        androidMain.dependencies {
+            api 'org.jetbrains.kotlin:kotlin-stdlib'
+        }
+        androidTest.dependencies {
+            implementation 'org.jetbrains.kotlin:kotlin-test-junit'
+        }
+    }
+}
+
+android {
+    compileSdkVersion 28
+
+    defaultConfig {
+        minSdkVersion 21
+    }
+}
+
+task packForXCode(type: Sync) {
+    final File frameworkDir = new File(buildDir, "xcode-frameworks")
+    final String mode = System.getenv('CONFIGURATION')?.toUpperCase() ?: 'DEBUG'
+
+    inputs.property "mode", mode
+    dependsOn kotlin.targets.ios.compilations.main.linkTaskName("FRAMEWORK", mode)
+
+    from { kotlin.targets.ios.compilations.main.getBinary("FRAMEWORK", mode).parentFile }
+    into frameworkDir
+
+    doLast {
+        new File(frameworkDir, 'gradlew').with {
+            text = "#!/bin/bash\nexport 'JAVA_HOME=${System.getProperty("java.home")}'\ncd '${rootProject.rootDir}'\n./gradlew \$@\n"
+            setExecutable(true)
+        }
+    }
+}
+
+tasks.build.dependsOn packForXCode
+
+afterEvaluate { project ->
+    project.task('iosTest') {
+        def device = project.findProperty("iosDevice")?.toString() ?: "iPhone 8"
+        dependsOn 'linkTestDebugExecutableIos'
+        group = JavaBasePlugin.VERIFICATION_GROUP
+        description = "Runs tests for target 'ios' on an iOS simulator"
+
+        doLast {
+            def binary = kotlin.targets.ios.compilations.test.getBinary('EXECUTABLE', 'DEBUG')
+            exec {
+                commandLine 'xcrun', 'simctl', 'spawn', device, binary.absolutePath
+            }
+        }
+    }
+    
+    project.tasks['test'].dependsOn iosTest
+}
+
+// workaround for https://youtrack.jetbrains.com/issue/KT-27170
+configurations {
+    compileClasspath
 }
