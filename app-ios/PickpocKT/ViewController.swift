@@ -11,7 +11,7 @@ import Shared
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource
 {
-    lazy var viewModel = SharedLockViewModel(guessableProvider: SharedLockProvider(), listener: nil)
+    lazy var viewModel = LockViewModel(guessableProvider: LockProvider(), listener: nil)
 
     @IBOutlet var guessList: UITableView?
     @IBOutlet var currentGuessView: UILabel?
@@ -31,14 +31,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         guessList?.delegate = self
         guessList?.dataSource = self
 
-        viewModel.setListener(listener: { (state: SharedViewState) -> SharedStdlibUnit in
+        viewModel.setListener(listener: { (state: ViewState) -> KotlinUnit in
             for button in self.buttons {
                 button?.isEnabled = state.enabled
             }
             self.currentGuessView?.text = state.guess
             self.setItems(items: state.results)
             
-            return SharedStdlibUnit()
+            return KotlinUnit()
         })
     }
 
@@ -76,9 +76,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     
-    var items: [SharedGuessListItem] = []
+    var items: [GuessListItem] = []
     
-    func setItems(items: [SharedGuessListItem]) {
+    func setItems(items: [GuessListItem]) {
         self.items = items
         self.guessList?.reloadData()
     }
