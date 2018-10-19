@@ -16,18 +16,34 @@ kotlin {
     }
 
     sourceSets {
-        commonMain.dependencies {
-            api 'org.jetbrains.kotlin:kotlin-stdlib-common'
+        commonMain {
+            dependencies {
+                api 'org.jetbrains.kotlin:kotlin-stdlib-common'
+            }
         }
-        commonTest.dependencies {
-            implementation 'org.jetbrains.kotlin:kotlin-test'
+        commonTest {
+            dependencies {
+                implementation 'org.jetbrains.kotlin:kotlin-test'
+                implementation 'org.jetbrains.kotlin:kotlin-test-annotations-common'
+            }
         }
 
-        androidMain.dependencies {
-            api 'org.jetbrains.kotlin:kotlin-stdlib'
+        androidMain {
+            dependencies {
+                api 'org.jetbrains.kotlin:kotlin-stdlib'
+            }
         }
-        androidTest.dependencies {
-            implementation 'org.jetbrains.kotlin:kotlin-test-junit'
+        androidTest {
+            dependencies {
+                implementation 'org.jetbrains.kotlin:kotlin-test-junit'
+            }
+        }
+
+        iosMain {
+            dependencies {}
+        }
+        iosTest {
+            dependencies {}
         }
     }
 }
