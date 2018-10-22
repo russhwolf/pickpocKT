@@ -21,6 +21,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBOutlet var button4: UIButton?
     @IBOutlet var button5: UIButton?
     @IBOutlet var button6: UIButton?
+    @IBOutlet var lockImage: UIImageView?
     
     lazy var buttons = [button1, button2, button3, button4, button5, button6]
     
@@ -37,6 +38,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             }
             self.currentGuessView?.text = state.guess
             self.setItems(items: state.results)
+            
+            let imageName = state.locked ? "LockClosed" : "LockOpen"
+            self.lockImage?.image = UIImage.init(named: imageName)
             
             return KotlinUnit()
         })

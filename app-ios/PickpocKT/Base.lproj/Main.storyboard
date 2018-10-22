@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -27,7 +27,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b7w-ET-NIX">
-                                <rect key="frame" x="172" y="617" width="30" height="30"/>
+                                <rect key="frame" x="172.5" y="617" width="30" height="30"/>
                                 <state key="normal" title="5"/>
                                 <connections>
                                     <action selector="pressButton5" destination="BYZ-38-t0r" eventType="touchUpInside" id="AaU-uH-sFx"/>
@@ -49,7 +49,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="csB-Ik-oW1">
-                                <rect key="frame" x="172" y="560" width="30" height="30"/>
+                                <rect key="frame" x="172.5" y="560" width="30" height="30"/>
                                 <state key="normal" title="2"/>
                                 <connections>
                                     <action selector="pressButton2" destination="BYZ-38-t0r" eventType="touchUpInside" id="7XE-s4-Z2c"/>
@@ -63,22 +63,25 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qrd-6c-P6v">
-                                <rect key="frame" x="167" y="494" width="42" height="30"/>
+                                <rect key="frame" x="166.5" y="494" width="42" height="30"/>
                                 <state key="normal" title="Reset"/>
                                 <connections>
                                     <action selector="pressReset" destination="BYZ-38-t0r" eventType="touchUpInside" id="iW4-F0-mYR"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VnD-4K-cKN">
-                                <rect key="frame" x="167" y="442" width="42" height="21"/>
+                                <rect key="frame" x="166.5" y="439" width="42" height="24"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" sectionIndexMinimumDisplayRowCount="1" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="zJb-LE-53B">
-                                <rect key="frame" x="24" y="20" width="327" height="414"/>
+                                <rect key="frame" x="24" y="20" width="327" height="411"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </tableView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LockClosed" translatesAutoresizingMaskIntoConstraints="NO" id="foA-Zq-Me1">
+                                <rect key="frame" x="16" y="439" width="24" height="24"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -88,6 +91,7 @@
                             <constraint firstItem="zJb-LE-53B" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="CG5-dp-xWU"/>
                             <constraint firstAttribute="bottom" secondItem="Swp-Z7-D3T" secondAttribute="bottom" constant="20" symbolic="YES" id="GHV-oo-t6O"/>
                             <constraint firstItem="zJb-LE-53B" firstAttribute="centerX" secondItem="csB-Ik-oW1" secondAttribute="centerX" id="IF3-n9-xZU"/>
+                            <constraint firstItem="foA-Zq-Me1" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="K2N-w6-eXx"/>
                             <constraint firstItem="VnD-4K-cKN" firstAttribute="leading" secondItem="Qrd-6c-P6v" secondAttribute="leading" id="N4M-fR-UVx"/>
                             <constraint firstItem="zJb-LE-53B" firstAttribute="leading" secondItem="lgY-I0-pCK" secondAttribute="leading" id="QSw-IC-ab5"/>
                             <constraint firstItem="Swp-Z7-D3T" firstAttribute="top" secondItem="lgY-I0-pCK" secondAttribute="bottom" constant="27" id="RYv-P6-Qnk"/>
@@ -97,9 +101,11 @@
                             <constraint firstItem="csB-Ik-oW1" firstAttribute="baseline" secondItem="j6L-4x-RK3" secondAttribute="baseline" id="fH3-Iz-1Nu"/>
                             <constraint firstItem="zJb-LE-53B" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="24" id="gba-yn-LFm"/>
                             <constraint firstItem="b7w-ET-NIX" firstAttribute="baseline" secondItem="HuK-Ww-oWi" secondAttribute="baseline" id="hG1-3k-cpw"/>
+                            <constraint firstItem="VnD-4K-cKN" firstAttribute="centerY" secondItem="foA-Zq-Me1" secondAttribute="centerY" id="iVx-oT-bQf"/>
                             <constraint firstItem="csB-Ik-oW1" firstAttribute="top" secondItem="Qrd-6c-P6v" secondAttribute="bottom" constant="36" id="jBS-gd-6T9"/>
                             <constraint firstItem="VnD-4K-cKN" firstAttribute="trailing" secondItem="Qrd-6c-P6v" secondAttribute="trailing" id="jLh-RT-VPA"/>
                             <constraint firstItem="Qrd-6c-P6v" firstAttribute="top" secondItem="VnD-4K-cKN" secondAttribute="bottom" constant="31" id="khw-RL-tcp"/>
+                            <constraint firstItem="foA-Zq-Me1" firstAttribute="top" secondItem="VnD-4K-cKN" secondAttribute="top" id="lQS-yP-dxx"/>
                             <constraint firstItem="csB-Ik-oW1" firstAttribute="leading" secondItem="b7w-ET-NIX" secondAttribute="leading" id="oTB-D1-UGr"/>
                             <constraint firstItem="lgY-I0-pCK" firstAttribute="baseline" secondItem="csB-Ik-oW1" secondAttribute="baseline" id="r0a-mX-1Ja"/>
                             <constraint firstItem="j6L-4x-RK3" firstAttribute="leading" secondItem="HuK-Ww-oWi" secondAttribute="leading" id="r1Q-Mi-x32"/>
@@ -115,6 +121,7 @@
                         <outlet property="button6" destination="HuK-Ww-oWi" id="nId-nI-zbX"/>
                         <outlet property="currentGuessView" destination="VnD-4K-cKN" id="6sk-BX-8ul"/>
                         <outlet property="guessList" destination="zJb-LE-53B" id="XFA-Km-UZx"/>
+                        <outlet property="lockImage" destination="foA-Zq-Me1" id="8BC-A6-DjJ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -122,4 +129,7 @@
             <point key="canvasLocation" x="32.799999999999997" y="33.733133433283363"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="LockClosed" width="24" height="24"/>
+    </resources>
 </document>
