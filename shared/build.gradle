@@ -8,7 +8,7 @@ kotlin {
     targets {
         final def iosTarget = System.getenv('SDK_NAME')?.startsWith("iphoneos") ? presets.iosArm64 : presets.iosX64
 
-        fromPreset(iosTarget, 'ios') {
+        fromPreset(presets.iosX64, 'ios') {
             compilations.main.outputKinds('FRAMEWORK')
         }
 
@@ -19,6 +19,7 @@ kotlin {
         commonMain {
             dependencies {
                 api 'org.jetbrains.kotlin:kotlin-stdlib-common'
+                implementation 'com.russhwolf:multiplatform-settings-common:0.1.1'
             }
         }
         commonTest {
@@ -40,12 +41,18 @@ kotlin {
         }
 
         iosMain {
-            dependencies {}
+            dependencies {
+                api 'com.russhwolf:multiplatform-settings-ios:0.1.1'
+            }
         }
         iosTest {
             dependencies {}
         }
     }
+}
+
+dependencies {
+    api 'com.russhwolf:multiplatform-settings-android:0.1.1'
 }
 
 android {
@@ -90,7 +97,7 @@ afterEvaluate { project ->
             }
         }
     }
-    
+
     project.tasks['test'].dependsOn iosTest
 }
 

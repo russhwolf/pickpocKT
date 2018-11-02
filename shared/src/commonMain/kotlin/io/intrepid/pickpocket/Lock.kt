@@ -1,8 +1,9 @@
 package io.intrepid.pickpocket
 
-interface Guessable {
-    fun submitGuess(guess: String): GuessResult
-}
+import com.russhwolf.settings.Settings
+import com.russhwolf.settings.contains
+import com.russhwolf.settings.get
+import com.russhwolf.settings.minusAssign
 
 /**
  * This is the Lock class which will hold a secret code and return [GuessResult] responses when guesses are made.
@@ -12,6 +13,16 @@ class Lock(private val code: String) : Guessable {
         val numCorrect = numCorrect(guess, code)
         val numMisplaced = totalMatches(guess, code) - numCorrect
         return GuessResult(numCorrect, numMisplaced)
+    }
+
+    override fun save(settings: Settings) = settings.putString("code", code)
+
+    companion object {
+        fun load(settings: Settings): Lock? = if ("code" in settings) Lock(settings["code", "111"]) else null
+
+        fun clear(settings: Settings) {
+            settings -= "code"
+        }
     }
 }
 
@@ -31,7 +42,3 @@ private fun totalMatches(guess: String, code: String): Int {
     }
     return 0
 }
-
-private fun String.sorted(): String = toList().sorted().joinToString(separator = "")
-
-data class GuessResult(val numCorrect: Int, val numMisplaced: Int)

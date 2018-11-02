@@ -1,5 +1,7 @@
 package io.intrepid.pickpocket
 
+import com.russhwolf.settings.ExperimentalListener
+import com.russhwolf.settings.Settings
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -21,6 +23,7 @@ private val STATE_STARTED = ViewState(
 class LockViewModelTest {
 
     private lateinit var mockGuessableProvider: MockGuessableProvider
+    private lateinit var mockSettings: MockSettings
     private lateinit var mockViewStateListener: MockViewStateListener
 
     private lateinit var viewModel: LockViewModel
@@ -28,9 +31,10 @@ class LockViewModelTest {
     @BeforeTest
     fun setup() {
         mockGuessableProvider = MockGuessableProvider()
+        mockSettings = MockSettings()
         mockViewStateListener = MockViewStateListener()
 
-        viewModel = LockViewModel(mockGuessableProvider, mockViewStateListener)
+        viewModel = LockViewModel(mockSettings, mockGuessableProvider, mockViewStateListener)
     }
 
     @Test
@@ -169,7 +173,14 @@ class LockViewModelTest {
 }
 
 private class MockGuessableProvider : GuessableProvider {
+    // TODO better save/load mocks
+    override fun loadGuessable(settings: Settings): Guessable? = null
+
+    override fun clearSavedGuessable(settings: Settings) = Unit
+
     override fun newGuessable(codeLength: Int, digits: Int): Guessable = object : Guessable {
+        override fun save(settings: Settings) = Unit
+
         override fun submitGuess(guess: String): GuessResult = result
     }
 
@@ -192,3 +203,27 @@ private class MockViewStateListener : ViewStateListener {
         assertEquals(expectedState, state, "Received unexpected state!")
     }
 }
+
+// TODO Mock this better in order to test save/load logic
+private class MockSettings: Settings {
+    @ExperimentalListener
+    override fun addListener(key: String, callback: () -> Unit): Settings.Listener = throw NotImplementedError()
+    override fun clear() = Unit
+    override fun getBoolean(key: String, defaultValue: Boolean): Boolean = defaultValue
+    override fun getDouble(key: String, defaultValue: Double): Double = defaultValue
+    override fun getFloat(key: String, defaultValue: Float): Float = defaultValue
+    override fun getInt(key: String, defaultValue: Int): Int = defaultValue
+    override fun getLong(key: String, defaultValue: Long): Long = defaultValue
+    override fun getString(key: String, defaultValue: String): String = defaultValue
+    override fun hasKey(key: String): Boolean = false
+    override fun putBoolean(key: String, value: Boolean) = Unit
+    override fun putDouble(key: String, value: Double) = Unit
+    override fun putFloat(key: String, value: Float) = Unit
+    override fun putInt(key: String, value: Int) = Unit
+    override fun putLong(key: String, value: Long) = Unit
+    override fun putString(key: String, value: String) = Unit
+    override fun remove(key: String) = Unit
+    @ExperimentalListener
+    override fun removeListener(listener: Settings.Listener) = Unit
+}
+

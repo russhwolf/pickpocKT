@@ -1,7 +1,14 @@
 package io.intrepid.pickpocket.android
 
-import android.arch.lifecycle.*
+import android.app.Application
+import android.arch.lifecycle.AndroidViewModel
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProvider
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.recyclerview.extensions.ListAdapter
 import android.support.v7.util.DiffUtil
@@ -15,6 +22,7 @@ import butterknife.BindView
 import butterknife.BindViews
 import butterknife.ButterKnife
 import butterknife.OnClick
+import com.russhwolf.settings.PlatformSettings
 import io.intrepid.pickpocket.GuessListItem
 import io.intrepid.pickpocket.LockViewModel
 import io.intrepid.pickpocket.ViewState
@@ -22,7 +30,12 @@ import io.intrepid.pickpocket.ViewState
 @Suppress("ProtectedInFinal")
 class LockActivity : AppCompatActivity() {
 
-    private val viewModel: LockArchViewModel by lazy { ViewModelProviders.of(this)[LockArchViewModel::class.java] }
+    private val viewModel: LockArchViewModel by lazy {
+        ViewModelProviders.of(
+            this,
+            ViewModelProvider.AndroidViewModelFactory(application)
+        )[LockArchViewModel::class.java]
+    }
 
     @BindView(R.id.guess_list)
     protected lateinit var guessList: RecyclerView
@@ -111,8 +124,9 @@ class GuessViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
     }
 }
 
-class LockArchViewModel : ViewModel() {
-    val lockViewModel = LockViewModel()
+class LockArchViewModel(application: Application) : AndroidViewModel(application) {
+    val lockViewModel =
+        LockViewModel(settings = PlatformSettings(PreferenceManager.getDefaultSharedPreferences(application)))
 
     private val mutableState = MutableLiveData<ViewState>()
     val state: LiveData<ViewState> get() = mutableState

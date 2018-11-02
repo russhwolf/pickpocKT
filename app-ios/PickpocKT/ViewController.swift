@@ -11,7 +11,7 @@ import shared
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource
 {
-    lazy var viewModel = LockViewModel(guessableProvider: LockProvider(), listener: nil)
+    lazy var viewModel = LockViewModel(settings: IosHelpersKt.createSettings(delegate: UserDefaults.standard), guessableProvider: LockProvider(), listener: nil)
 
     @IBOutlet var guessList: UITableView?
     @IBOutlet var currentGuessView: UILabel?
