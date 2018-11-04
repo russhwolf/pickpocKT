@@ -5,7 +5,7 @@ import kotlin.test.assertEquals
 
 class LockTest {
     @Test
-    fun `run all test cases`() {
+    fun `run all test cases`() = runBlocking {
         for (testCase in testCases) {
             val lock = Lock(testCase.code)
             val result = lock.submitGuess(testCase.guess)

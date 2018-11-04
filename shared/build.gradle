@@ -1,4 +1,5 @@
 apply plugin: 'kotlin-multiplatform'
+apply plugin: 'kotlinx-serialization'
 apply plugin: 'com.android.library'
 
 group = 'io.intrepid.pickpocket'
@@ -8,7 +9,7 @@ kotlin {
     targets {
         final def iosTarget = System.getenv('SDK_NAME')?.startsWith("iphoneos") ? presets.iosArm64 : presets.iosX64
 
-        fromPreset(presets.iosX64, 'ios') {
+        fromPreset(iosTarget, 'ios') {
             compilations.main.outputKinds('FRAMEWORK')
         }
 
@@ -16,9 +17,20 @@ kotlin {
     }
 
     sourceSets {
+        def ktor_version = "1.0.0-beta-3"
+        def coroutine_version = "1.0.0"
+        def serialization_version = "0.9.0"
         commonMain {
             dependencies {
-                api 'org.jetbrains.kotlin:kotlin-stdlib-common'
+                implementation 'org.jetbrains.kotlin:kotlin-stdlib-common'
+
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$coroutine_version"
+                
+                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:$serialization_version"
+
+                implementation "io.ktor:ktor-client-core:$ktor_version"
+                implementation "io.ktor:ktor-client-json:$ktor_version"
+                
                 implementation 'com.russhwolf:multiplatform-settings-common:0.1.1'
             }
         }
@@ -31,22 +43,45 @@ kotlin {
 
         androidMain {
             dependencies {
-                api 'org.jetbrains.kotlin:kotlin-stdlib'
+                implementation 'org.jetbrains.kotlin:kotlin-stdlib'
+
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version"
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_version"
+
+                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serialization_version"
+
+                implementation "io.ktor:ktor-client-android:$ktor_version"
+                implementation "io.ktor:ktor-client-core-jvm:$ktor_version"
+                implementation "io.ktor:ktor-client-json:$ktor_version"
+                implementation "io.ktor:ktor-client-gson:$ktor_version"
             }
         }
         androidTest {
             dependencies {
                 implementation 'org.jetbrains.kotlin:kotlin-test-junit'
+
+                implementation "io.ktor:ktor-client-mock:$ktor_version"
+                implementation "io.ktor:ktor-client-json:$ktor_version"
+                implementation "io.ktor:ktor-client-gson:$ktor_version"
             }
         }
 
         iosMain {
             dependencies {
-                api 'com.russhwolf:multiplatform-settings-ios:0.1.1'
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-native:$coroutine_version"
+
+                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:$serialization_version"
+
+                implementation "io.ktor:ktor-client-ios:$ktor_version"
+                implementation "io.ktor:ktor-client-core-ios:$ktor_version"
+                implementation "io.ktor:ktor-client-json-ios:$ktor_version"
+
+                implementation 'com.russhwolf:multiplatform-settings-ios:0.1.1'
             }
         }
         iosTest {
-            dependencies {}
+            dependencies {
+            }
         }
     }
 }

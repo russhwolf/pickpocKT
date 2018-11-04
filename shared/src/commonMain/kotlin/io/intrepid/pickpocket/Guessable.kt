@@ -3,7 +3,7 @@ package io.intrepid.pickpocket
 import com.russhwolf.settings.Settings
 
 interface Guessable {
-    fun submitGuess(guess: String): GuessResult
+    suspend fun submitGuess(guess: String): GuessResult
 
     fun save(settings: Settings)
 }

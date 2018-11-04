@@ -9,9 +9,14 @@
 import UIKit
 import shared
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, Kotlinx_coroutines_core_nativeCoroutineScope
 {
-    lazy var viewModel = LockViewModel(settings: IosHelpersKt.createSettings(delegate: UserDefaults.standard), guessableProvider: LockProvider(), listener: nil)
+    let job: Kotlinx_coroutines_core_nativeJob = IosHelpersKt.Job()
+    lazy var coroutineContext: KotlinCoroutineContext = IosHelpersKt.createContext(dispatcher: NsQueueDispatcherKt.iosMainDispatcher, job: job)
+    let settings: Multiplatform_settings_iosSettings = IosHelpersKt.createSettings(delegate: UserDefaults.standard)
+
+    lazy var viewModel = LockViewModel(settings: settings, guessableProvider: IosHelpersKt.getIosWebLockProvider(settings: settings), listener: nil)
+//    lazy var viewModel = LockViewModel(settings: settings, guessableProvider: LockProvider(settings: settings), listener: nil)
 
     @IBOutlet var guessList: UITableView?
     @IBOutlet var currentGuessView: UILabel?
@@ -46,6 +51,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         })
     }
 
+    deinit {
+        viewModel.deinit()
+    }
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -56,29 +65,28 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     @IBAction func pressButton1() {
-        viewModel.input(character: "1")
+        IosHelpersKt.launchInput(self, lockViewModel: viewModel, character: "1")
     }
     
     @IBAction func pressButton2() {
-        viewModel.input(character: "2")
+        IosHelpersKt.launchInput(self, lockViewModel: viewModel, character: "2")
     }
     
     @IBAction func pressButton3() {
-        viewModel.input(character: "3")
+        IosHelpersKt.launchInput(self, lockViewModel: viewModel, character: "3")
     }
     
     @IBAction func pressButton4() {
-        viewModel.input(character: "4")
+        IosHelpersKt.launchInput(self, lockViewModel: viewModel, character: "4")
     }
     
     @IBAction func pressButton5() {
-        viewModel.input(character: "5")
+        IosHelpersKt.launchInput(self, lockViewModel: viewModel, character: "5")
     }
     
     @IBAction func pressButton6() {
-        viewModel.input(character: "6")
+        IosHelpersKt.launchInput(self, lockViewModel: viewModel, character: "6")
     }
-    
     
     var items: [GuessListItem] = []
     

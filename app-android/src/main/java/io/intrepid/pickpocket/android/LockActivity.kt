@@ -26,9 +26,23 @@ import com.russhwolf.settings.PlatformSettings
 import io.intrepid.pickpocket.GuessListItem
 import io.intrepid.pickpocket.LockViewModel
 import io.intrepid.pickpocket.ViewState
+import io.intrepid.pickpocket.WebLockProvider
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.android.AndroidClientEngine
+import io.ktor.client.engine.android.AndroidEngineConfig
+import io.ktor.client.features.json.GsonSerializer
+import io.ktor.client.features.json.JsonFeature
+import io.ktor.client.features.json.serializer.KotlinxSerializer
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
 
 @Suppress("ProtectedInFinal")
-class LockActivity : AppCompatActivity() {
+class LockActivity : AppCompatActivity(), CoroutineScope {
+    private val job = Job()
+    override val coroutineContext: CoroutineContext = job + Dispatchers.Main
 
     private val viewModel: LockArchViewModel by lazy {
         ViewModelProviders.of(
@@ -73,19 +87,26 @@ class LockActivity : AppCompatActivity() {
         })
     }
 
+    override fun onDestroy() {
+        job.cancel()
+        super.onDestroy()
+    }
+
     @OnClick(R.id.button_1, R.id.button_2, R.id.button_3, R.id.button_4, R.id.button_5, R.id.button_6)
     protected fun onButtonClick(button: Button) {
-        viewModel.lockViewModel.input(
-            when (button.id) {
-                R.id.button_1 -> "1"
-                R.id.button_2 -> "2"
-                R.id.button_3 -> "3"
-                R.id.button_4 -> "4"
-                R.id.button_5 -> "5"
-                R.id.button_6 -> "6"
-                else -> throw IllegalArgumentException("Invalid id ${button.id}")
-            }
-        )
+        launch {
+            viewModel.lockViewModel.input(
+                when (button.id) {
+                    R.id.button_1 -> "1"
+                    R.id.button_2 -> "2"
+                    R.id.button_3 -> "3"
+                    R.id.button_4 -> "4"
+                    R.id.button_5 -> "5"
+                    R.id.button_6 -> "6"
+                    else -> throw IllegalArgumentException("Invalid id ${button.id}")
+                }
+            )
+        }
     }
 
     @OnClick(R.id.reset_button)
@@ -125,8 +146,17 @@ class GuessViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
 }
 
 class LockArchViewModel(application: Application) : AndroidViewModel(application) {
+    private val settings = PlatformSettings(PreferenceManager.getDefaultSharedPreferences(application))
     val lockViewModel =
-        LockViewModel(settings = PlatformSettings(PreferenceManager.getDefaultSharedPreferences(application)))
+        LockViewModel(
+            settings = settings,
+            guessableProvider = WebLockProvider(
+                httpClient = HttpClient(AndroidClientEngine(AndroidEngineConfig())) {
+                    install(JsonFeature) { serializer = KotlinxSerializer() }
+                },
+                settings = settings
+            )
+        )
 
     private val mutableState = MutableLiveData<ViewState>()
     val state: LiveData<ViewState> get() = mutableState
@@ -136,6 +166,6 @@ class LockArchViewModel(application: Application) : AndroidViewModel(application
     }
 
     override fun onCleared() {
-        lockViewModel.setListener(null)
+        lockViewModel.deinit()
     }
 }

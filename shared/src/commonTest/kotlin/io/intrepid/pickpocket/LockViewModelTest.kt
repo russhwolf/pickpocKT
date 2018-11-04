@@ -50,7 +50,7 @@ class LockViewModelTest {
     }
 
     @Test
-    fun `incomplete guess`() {
+    fun `incomplete guess`() = runBlocking {
         viewModel.reset()
         viewModel.input("3")
 
@@ -65,7 +65,7 @@ class LockViewModelTest {
     }
 
     @Test
-    fun `incorrect guess`() {
+    fun `incorrect guess`() = runBlocking {
         mockGuessableProvider.setNextResult(GuessResult(numCorrect = 1, numMisplaced = 1))
 
         viewModel.reset()
@@ -91,7 +91,7 @@ class LockViewModelTest {
     }
 
     @Test
-    fun `correct guess`() {
+    fun `correct guess`() = runBlocking {
         viewModel.reset()
         mockGuessableProvider.setNextResult(GuessResult(numCorrect = 1, numMisplaced = 1))
         viewModel.input("3")
@@ -133,7 +133,7 @@ class LockViewModelTest {
     }
 
     @Test
-    fun `reset mid-game`() {
+    fun `reset mid-game`() = runBlocking {
         viewModel.reset()
         viewModel.input("3")
         viewModel.reset()
@@ -142,7 +142,7 @@ class LockViewModelTest {
     }
 
     @Test
-    fun `reset post-game`() {
+    fun `reset post-game`() = runBlocking {
         mockGuessableProvider.setNextResult(GuessResult(numCorrect = 3, numMisplaced = 0))
         viewModel.reset()
         viewModel.input("1")
@@ -174,14 +174,14 @@ class LockViewModelTest {
 
 private class MockGuessableProvider : GuessableProvider {
     // TODO better save/load mocks
-    override fun loadGuessable(settings: Settings): Guessable? = null
+    override fun loadGuessable(): Guessable? = null
 
-    override fun clearSavedGuessable(settings: Settings) = Unit
+    override fun clearSavedGuessable() = Unit
 
     override fun newGuessable(codeLength: Int, digits: Int): Guessable = object : Guessable {
         override fun save(settings: Settings) = Unit
 
-        override fun submitGuess(guess: String): GuessResult = result
+        override suspend fun submitGuess(guess: String): GuessResult = result
     }
 
     private lateinit var result: GuessResult

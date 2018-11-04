@@ -1,5 +1,10 @@
 package io.intrepid.pickpocket
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.cancelChildren
+import kotlin.coroutines.CoroutineContext
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.boolean
 import com.russhwolf.settings.get
@@ -12,10 +17,13 @@ private const val CODE_LENGTH = 3
 
 class LockViewModel(
     private val settings: Settings,
-    private val guessableProvider: GuessableProvider = LockProvider(),
+    private val guessableProvider: GuessableProvider = LockProvider(settings),
     private var listener: ViewStateListener? = null
-) {
-    private var lock: Guessable? = guessableProvider.loadGuessable(settings)
+) : CoroutineScope {
+
+    override val coroutineContext: CoroutineContext = Job()
+
+    private var lock: Guessable? = guessableProvider.loadGuessable()
 
     private var state: ViewState by Delegates.observable(ViewState.load(settings)) { _, _, newValue ->
         newValue.save(settings)
@@ -24,6 +32,11 @@ class LockViewModel(
 
     init {
         listener?.invoke(state)
+    }
+
+    fun deinit() {
+        listener = null
+        coroutineContext.cancel()
     }
 
     fun setListener(listener: ViewStateListener?) {
@@ -35,7 +48,7 @@ class LockViewModel(
         if (state.enabled || !state.locked) {
             // reset
             lock = null
-            guessableProvider.clearSavedGuessable(settings)
+            guessableProvider.clearSavedGuessable()
             state = ViewState()
         } else {
             // start
@@ -44,9 +57,10 @@ class LockViewModel(
             lock.save(settings)
             state = state.copy(enabled = true)
         }
+        coroutineContext.cancelChildren()
     }
 
-    fun input(character: String) {
+    suspend fun input(character: String) {
         val guess = state.guess + character[0]
         if (guess.length == CODE_LENGTH) {
             processGuess(guess)
@@ -55,7 +69,7 @@ class LockViewModel(
         }
     }
 
-    private fun processGuess(guess: String) {
+    private suspend fun processGuess(guess: String) {
         val lock = lock ?: return
 
         val (numCorrect, numMisplaced) = lock.submitGuess(guess)
