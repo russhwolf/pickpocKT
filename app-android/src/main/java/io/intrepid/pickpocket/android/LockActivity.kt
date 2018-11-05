@@ -150,7 +150,7 @@ class LockArchViewModel(application: Application) : AndroidViewModel(application
     val lockViewModel =
         LockViewModel(
             settings = settings,
-            guessableProvider = WebLockProvider(
+            lockProvider = WebLockProvider(
                 httpClient = HttpClient(AndroidClientEngine(AndroidEngineConfig())) {
                     install(JsonFeature) { serializer = KotlinxSerializer() }
                 },

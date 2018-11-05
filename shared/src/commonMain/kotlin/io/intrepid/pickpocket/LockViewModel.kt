@@ -17,13 +17,13 @@ private const val CODE_LENGTH = 3
 
 class LockViewModel(
     private val settings: Settings,
-    private val guessableProvider: GuessableProvider = LockProvider(settings),
+    private val lockProvider: LockProvider = LocalLockProvider(settings),
     private var listener: ViewStateListener? = null
 ) : CoroutineScope {
 
     override val coroutineContext: CoroutineContext = Job()
 
-    private var lock: Guessable? = guessableProvider.loadGuessable()
+    private var lock: Lock? = lockProvider.loadLock()
 
     private var state: ViewState by Delegates.observable(ViewState.load(settings)) { _, _, newValue ->
         newValue.save(settings)
@@ -48,11 +48,11 @@ class LockViewModel(
         if (state.enabled || !state.locked) {
             // reset
             lock = null
-            guessableProvider.clearSavedGuessable()
+            lockProvider.clearSavedLock()
             state = ViewState()
         } else {
             // start
-            val lock = guessableProvider.newGuessable(CODE_LENGTH, DIGITS)
+            val lock = lockProvider.newLock(CODE_LENGTH, DIGITS)
             this.lock = lock
             lock.save(settings)
             state = state.copy(enabled = true)

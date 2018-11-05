@@ -15,7 +15,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     lazy var coroutineContext: KotlinCoroutineContext = IosHelpersKt.createContext(dispatcher: NsQueueDispatcherKt.iosMainDispatcher, job: job)
     let settings: Multiplatform_settings_iosSettings = IosHelpersKt.createSettings(delegate: UserDefaults.standard)
 
-    lazy var viewModel = LockViewModel(settings: settings, guessableProvider: IosHelpersKt.getIosWebLockProvider(settings: settings), listener: nil)
+    lazy var viewModel = LockViewModel(settings: settings, lockProvider: IosHelpersKt.getIosWebLockProvider(settings: settings), listener: nil)
 //    lazy var viewModel = LockViewModel(settings: settings, guessableProvider: LockProvider(settings: settings), listener: nil)
 
     @IBOutlet var guessList: UITableView?

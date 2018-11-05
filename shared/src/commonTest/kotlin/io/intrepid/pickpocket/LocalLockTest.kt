@@ -3,11 +3,11 @@ package io.intrepid.pickpocket
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class LockTest {
+class LocalLockTest {
     @Test
     fun `run all test cases`() = runBlocking {
         for (testCase in testCases) {
-            val lock = Lock(testCase.code)
+            val lock = LocalLock(testCase.code)
             val result = lock.submitGuess(testCase.guess)
             assertEquals(testCase.result, result, "Incorrect result for code=${testCase.code} guess=${testCase.guess}")
         }

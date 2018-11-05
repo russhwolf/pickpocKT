@@ -19,7 +19,7 @@ import io.ktor.http.content.TextContent
 import kotlinx.serialization.json.JSON
 import platform.Foundation.NSUserDefaults
 
-fun getIosWebLockProvider(settings: Settings): GuessableProvider =
+fun getIosWebLockProvider(settings: Settings): LockProvider =
     WebLockProvider(HttpClient(IosClient()) {
         install(JsonFeature) {
             // TODO make this less manual
