@@ -8,6 +8,7 @@ import kotlin.coroutines.CoroutineContext
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.boolean
 import com.russhwolf.settings.get
+import com.russhwolf.settings.minusAssign
 import com.russhwolf.settings.set
 import com.russhwolf.settings.string
 import kotlin.properties.Delegates
@@ -17,6 +18,7 @@ private const val CODE_LENGTH = 3
 
 class LockViewModel(
     private val settings: Settings,
+    private val webLockProvider: LockProvider,
     private val lockProvider: LockProvider = LocalLockProvider(settings),
     private var listener: ViewStateListener? = null
 ) : CoroutineScope {
@@ -44,19 +46,29 @@ class LockViewModel(
         listener?.invoke(state)
     }
 
-    fun reset() {
-        if (state.enabled || !state.locked) {
-            // reset
-            lock = null
-            lockProvider.clearSavedLock()
-            state = ViewState()
-        } else {
-            // start
-            val lock = lockProvider.newLock(CODE_LENGTH, DIGITS)
-            this.lock = lock
-            lock.save(settings)
-            state = state.copy(enabled = true)
+    fun startLocal() = start(Mode.LOCAL)
+    fun startWeb() = start(Mode.WEB)
+    private fun start(mode: Mode) {
+        val lockProvider = when (mode) {
+            Mode.LOCAL -> lockProvider
+            Mode.WEB -> webLockProvider
         }
+        val lock = lockProvider.newLock(CODE_LENGTH, DIGITS)
+        this.lock = lock
+        lock.save(settings)
+        state = state.copy(
+            enabled = true,
+            startButtonsVisible = false,
+            resetButtonVisible = true,
+            mode = mode
+        )
+        coroutineContext.cancelChildren()
+    }
+
+    fun reset() {
+        lock = null
+        lockProvider.clearSavedLock()
+        state = ViewState()
         coroutineContext.cancelChildren()
     }
 
@@ -78,7 +90,8 @@ class LockViewModel(
             guess = "",
             results = state.results + GuessListItem(guess, numCorrect, numMisplaced),
             locked = !complete,
-            enabled = !complete
+            enabled = !complete,
+            mode = if (complete) null else state.mode
         )
     }
 }
@@ -88,20 +101,29 @@ interface State {
     val results: List<GuessListItem>
     val locked: Boolean
     val enabled: Boolean
+    val startButtonsVisible: Boolean
+    val resetButtonVisible: Boolean
+    val mode: Mode?
 }
 
 data class ViewState(
     override val guess: String,
     override val results: List<GuessListItem>,
     override val locked: Boolean,
-    override val enabled: Boolean
+    override val enabled: Boolean,
+    override val startButtonsVisible: Boolean,
+    override val resetButtonVisible: Boolean,
+    override val mode: Mode?
 ) : State {
     companion object {
         operator fun invoke() = ViewState(
             guess = "",
             results = listOf(),
             locked = true,
-            enabled = false
+            enabled = false,
+            startButtonsVisible = true,
+            resetButtonVisible = false,
+            mode = null
         )
     }
 }
@@ -111,6 +133,9 @@ private fun State.save(settings: Settings): SavedState = SavedState(settings).al
     it.locked = this.locked
     it.enabled = this.enabled
     it.results = this.results
+    it.startButtonsVisible = this.startButtonsVisible
+    it.resetButtonVisible = this.resetButtonVisible
+    it.mode = this.mode
 }
 
 private fun ViewState.Companion.load(settings: Settings): ViewState = SavedState(settings).let { state ->
@@ -118,7 +143,10 @@ private fun ViewState.Companion.load(settings: Settings): ViewState = SavedState
         guess = state.guess,
         results = state.results,
         locked = state.locked,
-        enabled = state.enabled
+        enabled = state.enabled,
+        startButtonsVisible = state.startButtonsVisible,
+        resetButtonVisible = state.resetButtonVisible,
+        mode = state.mode
     )
 }
 
@@ -142,8 +170,23 @@ private class SavedState(private val settings: Settings) : State {
                 settings["results${index}_numMisplaced"] = guessListItem.numMisplaced
             }
         }
+    override var startButtonsVisible by settings.boolean("startButtonsVisible", true)
+    override var resetButtonVisible by settings.boolean("resetButtonVisible", false)
+    override var mode: Mode?
+        get() = when(settings["mode", ""]) {
+            Mode.LOCAL.name -> Mode.LOCAL
+            Mode.WEB.name -> Mode.WEB
+            else -> null
+        }
+        set(value) = if (value == null) {
+            settings -= "mode"
+        } else {
+            settings["mode"] = value.name
+        }
 }
 
 typealias ViewStateListener = (ViewState) -> Unit
 
 data class GuessListItem(val guess: String, val numCorrect: Int, val numMisplaced: Int)
+
+enum class Mode { LOCAL, WEB }

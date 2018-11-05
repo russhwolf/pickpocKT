@@ -10,14 +10,20 @@ private val STATE_INITIAL = ViewState(
     guess = "",
     results = listOf(),
     locked = true,
-    enabled = false
+    enabled = false,
+    startButtonsVisible = true,
+    resetButtonVisible = false,
+    mode = null
 )
 
 private val STATE_STARTED = ViewState(
     guess = "",
     results = listOf(),
     locked = true,
-    enabled = true
+    enabled = true,
+    startButtonsVisible = false,
+    resetButtonVisible = true,
+    mode = Mode.LOCAL
 )
 
 class LockViewModelTest {
@@ -34,7 +40,7 @@ class LockViewModelTest {
         mockSettings = MockSettings()
         mockViewStateListener = MockViewStateListener()
 
-        viewModel = LockViewModel(mockSettings, mockLockProvider, mockViewStateListener)
+        viewModel = LockViewModel(mockSettings, mockLockProvider, mockLockProvider, mockViewStateListener)
     }
 
     @Test
@@ -44,14 +50,14 @@ class LockViewModelTest {
 
     @Test
     fun `start game`() {
-        viewModel.reset()
+        viewModel.startLocal()
 
         mockViewStateListener.expect(STATE_STARTED)
     }
 
     @Test
     fun `incomplete guess`() = runBlocking {
-        viewModel.reset()
+        viewModel.startLocal()
         viewModel.input("3")
 
         mockViewStateListener.expect(
@@ -59,7 +65,10 @@ class LockViewModelTest {
                 guess = "3",
                 results = listOf(),
                 locked = true,
-                enabled = true
+                enabled = true,
+                startButtonsVisible = false,
+                resetButtonVisible = true,
+                mode = Mode.LOCAL
             )
         )
     }
@@ -68,7 +77,7 @@ class LockViewModelTest {
     fun `incorrect guess`() = runBlocking {
         mockLockProvider.setNextResult(GuessResult(numCorrect = 1, numMisplaced = 1))
 
-        viewModel.reset()
+        viewModel.startLocal()
         viewModel.input("3")
         viewModel.input("2")
         viewModel.input("4")
@@ -84,15 +93,17 @@ class LockViewModelTest {
                     )
                 ),
                 locked = true,
-                enabled = true
-
+                enabled = true,
+                startButtonsVisible = false,
+                resetButtonVisible = true,
+                mode = Mode.LOCAL
             )
         )
     }
 
     @Test
     fun `correct guess`() = runBlocking {
-        viewModel.reset()
+        viewModel.startLocal()
         mockLockProvider.setNextResult(GuessResult(numCorrect = 1, numMisplaced = 1))
         viewModel.input("3")
         viewModel.input("2")
@@ -127,14 +138,17 @@ class LockViewModelTest {
                     )
                 ),
                 locked = false,
-                enabled = false
+                enabled = false,
+                startButtonsVisible = false,
+                resetButtonVisible = true,
+                mode = null
             )
         )
     }
 
     @Test
     fun `reset mid-game`() = runBlocking {
-        viewModel.reset()
+        viewModel.startLocal()
         viewModel.input("3")
         viewModel.reset()
 
@@ -144,7 +158,7 @@ class LockViewModelTest {
     @Test
     fun `reset post-game`() = runBlocking {
         mockLockProvider.setNextResult(GuessResult(numCorrect = 3, numMisplaced = 0))
-        viewModel.reset()
+        viewModel.startLocal()
         viewModel.input("1")
         viewModel.input("2")
         viewModel.input("3")
@@ -165,7 +179,7 @@ class LockViewModelTest {
         mockViewStateListener.expect(STATE_INITIAL)
         mockStateListener2.expect(STATE_INITIAL)
 
-        viewModel.reset()
+        viewModel.startLocal()
 
         mockViewStateListener.expect(STATE_INITIAL)
         mockStateListener2.expect(STATE_STARTED)

@@ -15,9 +15,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     lazy var coroutineContext: KotlinCoroutineContext = IosHelpersKt.createContext(dispatcher: NsQueueDispatcherKt.iosMainDispatcher, job: job)
     let settings: Multiplatform_settings_iosSettings = IosHelpersKt.createSettings(delegate: UserDefaults.standard)
 
-    lazy var viewModel = LockViewModel(settings: settings, lockProvider: IosHelpersKt.getIosWebLockProvider(settings: settings), listener: nil)
-//    lazy var viewModel = LockViewModel(settings: settings, guessableProvider: LockProvider(settings: settings), listener: nil)
-
+    lazy var viewModel = LockViewModel(settings: settings, webLockProvider: IosHelpersKt.getIosWebLockProvider(settings: settings), lockProvider: LocalLockProvider(settings: settings), listener: nil)
+    
     @IBOutlet var guessList: UITableView?
     @IBOutlet var currentGuessView: UILabel?
     @IBOutlet var button1: UIButton?
@@ -27,6 +26,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBOutlet var button5: UIButton?
     @IBOutlet var button6: UIButton?
     @IBOutlet var lockImage: UIImageView?
+    @IBOutlet var startLocalButton: UIButton?
+    @IBOutlet var startWebButton: UIButton?
+    @IBOutlet var resetButton: UIButton?
     
     lazy var buttons = [button1, button2, button3, button4, button5, button6]
     
@@ -38,6 +40,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         guessList?.dataSource = self
 
         viewModel.setListener(listener: { (state: ViewState) -> KotlinUnit in
+            self.resetButton?.alpha = state.resetButtonVisible ? 1 : 0
+            self.startLocalButton?.alpha = state.startButtonsVisible ? 1 : 0
+            self.startWebButton?.alpha = state.startButtonsVisible ? 1 : 0
             for button in self.buttons {
                 button?.isEnabled = state.enabled
             }
@@ -58,6 +63,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    @IBAction func pressStartLocal() {
+        viewModel.startLocal()
+    }
+    
+    @IBAction func pressStartWeb() {
+        viewModel.startWeb()
     }
     
     @IBAction func pressReset() {

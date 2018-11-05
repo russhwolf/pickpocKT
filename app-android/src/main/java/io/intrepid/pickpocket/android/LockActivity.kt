@@ -15,6 +15,7 @@ import android.support.v7.util.DiffUtil
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
@@ -60,6 +61,12 @@ class LockActivity : AppCompatActivity(), CoroutineScope {
     @BindViews(R.id.button_1, R.id.button_2, R.id.button_3, R.id.button_4, R.id.button_5, R.id.button_6)
     protected lateinit var buttons: Array<Button>
 
+    @BindViews(R.id.start_button_local, R.id.start_button_web)
+    protected lateinit var startButtons: Array<Button>
+
+    @BindView(R.id.reset_button)
+    protected lateinit var resetButton: Button
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lock)
@@ -74,6 +81,9 @@ class LockActivity : AppCompatActivity(), CoroutineScope {
 
         viewModel.state.observe(this, Observer { state ->
             state ?: return@Observer
+
+            startButtons.forEach { it.visibility = if (state.startButtonsVisible) View.VISIBLE else View.GONE }
+            resetButton.visibility = if (state.resetButtonVisible) View.VISIBLE else View.INVISIBLE
 
             buttons.forEach { it.isEnabled = state.enabled }
             currentGuessText.text = state.guess
@@ -107,6 +117,16 @@ class LockActivity : AppCompatActivity(), CoroutineScope {
                 }
             )
         }
+    }
+
+    @OnClick(R.id.start_button_local)
+    protected fun onStartLocalClick() {
+        viewModel.lockViewModel.startLocal()
+    }
+
+    @OnClick(R.id.start_button_web)
+    protected fun onStartWebClick() {
+        viewModel.lockViewModel.startWeb()
     }
 
     @OnClick(R.id.reset_button)
@@ -150,7 +170,7 @@ class LockArchViewModel(application: Application) : AndroidViewModel(application
     val lockViewModel =
         LockViewModel(
             settings = settings,
-            lockProvider = WebLockProvider(
+            webLockProvider = WebLockProvider(
                 httpClient = HttpClient(AndroidClientEngine(AndroidEngineConfig())) {
                     install(JsonFeature) { serializer = KotlinxSerializer() }
                 },

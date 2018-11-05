@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -70,27 +70,44 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VnD-4K-cKN">
-                                <rect key="frame" x="166.5" y="439" width="42" height="24"/>
+                                <rect key="frame" x="166.5" y="415" width="42" height="48"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" sectionIndexMinimumDisplayRowCount="1" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="zJb-LE-53B">
-                                <rect key="frame" x="24" y="20" width="327" height="411"/>
+                                <rect key="frame" x="24" y="20" width="327" height="387"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </tableView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LockClosed" translatesAutoresizingMaskIntoConstraints="NO" id="foA-Zq-Me1">
-                                <rect key="frame" x="16" y="439" width="24" height="24"/>
+                                <rect key="frame" x="16" y="415" width="48" height="48"/>
                             </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gbz-ro-jfl">
+                                <rect key="frame" x="224" y="494" width="31" height="30"/>
+                                <state key="normal" title="Web"/>
+                                <connections>
+                                    <action selector="pressStartWeb" destination="BYZ-38-t0r" eventType="touchUpInside" id="fiz-O9-dDL"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="On8-N0-zfL">
+                                <rect key="frame" x="117" y="494" width="37" height="30"/>
+                                <state key="normal" title="Local"/>
+                                <connections>
+                                    <action selector="pressStartLocal" destination="BYZ-38-t0r" eventType="touchUpInside" id="4wr-cZ-gNA"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="Qrd-6c-P6v" firstAttribute="centerY" secondItem="On8-N0-zfL" secondAttribute="centerY" id="1LT-e3-nl9"/>
+                            <constraint firstItem="Qrd-6c-P6v" firstAttribute="centerY" secondItem="Gbz-ro-jfl" secondAttribute="centerY" id="1Tk-zI-223"/>
                             <constraint firstItem="Swp-Z7-D3T" firstAttribute="baseline" secondItem="b7w-ET-NIX" secondAttribute="baseline" id="4Y3-A1-HlA"/>
                             <constraint firstItem="csB-Ik-oW1" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="67H-x4-TP4"/>
                             <constraint firstItem="zJb-LE-53B" firstAttribute="trailing" secondItem="j6L-4x-RK3" secondAttribute="trailing" id="730-ln-6m6"/>
                             <constraint firstItem="zJb-LE-53B" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="CG5-dp-xWU"/>
                             <constraint firstAttribute="bottom" secondItem="Swp-Z7-D3T" secondAttribute="bottom" constant="20" symbolic="YES" id="GHV-oo-t6O"/>
                             <constraint firstItem="zJb-LE-53B" firstAttribute="centerX" secondItem="csB-Ik-oW1" secondAttribute="centerX" id="IF3-n9-xZU"/>
+                            <constraint firstItem="Qrd-6c-P6v" firstAttribute="leading" secondItem="On8-N0-zfL" secondAttribute="trailing" constant="12.5" id="JkL-jQ-fWI"/>
                             <constraint firstItem="foA-Zq-Me1" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="K2N-w6-eXx"/>
                             <constraint firstItem="VnD-4K-cKN" firstAttribute="leading" secondItem="Qrd-6c-P6v" secondAttribute="leading" id="N4M-fR-UVx"/>
                             <constraint firstItem="zJb-LE-53B" firstAttribute="leading" secondItem="lgY-I0-pCK" secondAttribute="leading" id="QSw-IC-ab5"/>
@@ -109,6 +126,7 @@
                             <constraint firstItem="csB-Ik-oW1" firstAttribute="leading" secondItem="b7w-ET-NIX" secondAttribute="leading" id="oTB-D1-UGr"/>
                             <constraint firstItem="lgY-I0-pCK" firstAttribute="baseline" secondItem="csB-Ik-oW1" secondAttribute="baseline" id="r0a-mX-1Ja"/>
                             <constraint firstItem="j6L-4x-RK3" firstAttribute="leading" secondItem="HuK-Ww-oWi" secondAttribute="leading" id="r1Q-Mi-x32"/>
+                            <constraint firstItem="Gbz-ro-jfl" firstAttribute="leading" secondItem="Qrd-6c-P6v" secondAttribute="trailing" constant="15.5" id="tHZ-eD-Oxu"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
@@ -122,6 +140,9 @@
                         <outlet property="currentGuessView" destination="VnD-4K-cKN" id="6sk-BX-8ul"/>
                         <outlet property="guessList" destination="zJb-LE-53B" id="XFA-Km-UZx"/>
                         <outlet property="lockImage" destination="foA-Zq-Me1" id="8BC-A6-DjJ"/>
+                        <outlet property="resetButton" destination="Qrd-6c-P6v" id="3JG-Ln-3Ch"/>
+                        <outlet property="startLocalButton" destination="On8-N0-zfL" id="S0E-jq-cn1"/>
+                        <outlet property="startWebButton" destination="Gbz-ro-jfl" id="KbW-nm-hi3"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -130,6 +151,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="LockClosed" width="24" height="24"/>
+        <image name="LockClosed" width="48" height="48"/>
     </resources>
 </document>
