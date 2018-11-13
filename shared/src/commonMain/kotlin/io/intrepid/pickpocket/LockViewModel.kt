@@ -18,7 +18,7 @@ private const val CODE_LENGTH = 3
 
 class LockViewModel(
     private val settings: Settings,
-    private val webLockProvider: LockProvider,
+    private val webLockProvider: LockProvider = WebLockProvider(httpClientEngine, settings),
     private val lockProvider: LockProvider = LocalLockProvider(settings),
     private var listener: ViewStateListener? = null
 ) : CoroutineScope {

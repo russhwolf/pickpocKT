@@ -27,13 +27,6 @@ import com.russhwolf.settings.PlatformSettings
 import io.intrepid.pickpocket.GuessListItem
 import io.intrepid.pickpocket.LockViewModel
 import io.intrepid.pickpocket.ViewState
-import io.intrepid.pickpocket.WebLockProvider
-import io.ktor.client.HttpClient
-import io.ktor.client.engine.android.AndroidClientEngine
-import io.ktor.client.engine.android.AndroidEngineConfig
-import io.ktor.client.features.json.GsonSerializer
-import io.ktor.client.features.json.JsonFeature
-import io.ktor.client.features.json.serializer.KotlinxSerializer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -167,16 +160,7 @@ class GuessViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
 
 class LockArchViewModel(application: Application) : AndroidViewModel(application) {
     private val settings = PlatformSettings(PreferenceManager.getDefaultSharedPreferences(application))
-    val lockViewModel =
-        LockViewModel(
-            settings = settings,
-            webLockProvider = WebLockProvider(
-                httpClient = HttpClient(AndroidClientEngine(AndroidEngineConfig())) {
-                    install(JsonFeature) { serializer = KotlinxSerializer() }
-                },
-                settings = settings
-            )
-        )
+    val lockViewModel = LockViewModel(settings = settings)
 
     private val mutableState = MutableLiveData<ViewState>()
     val state: LiveData<ViewState> get() = mutableState

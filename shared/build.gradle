@@ -17,9 +17,10 @@ kotlin {
     }
 
     sourceSets {
-        def ktor_version = "1.0.0-beta-3"
-        def coroutine_version = "1.0.0"
-        def serialization_version = "0.9.0"
+        def coroutine_version = "1.0.1"
+        def serialization_version = "0.9.1"
+        def ktor_version = "1.0.0"
+        def settings_version = "0.1.1"
         commonMain {
             dependencies {
                 implementation 'org.jetbrains.kotlin:kotlin-stdlib-common'
@@ -31,13 +32,17 @@ kotlin {
                 implementation "io.ktor:ktor-client-core:$ktor_version"
                 implementation "io.ktor:ktor-client-json:$ktor_version"
                 
-                implementation 'com.russhwolf:multiplatform-settings-common:0.1.1'
+                implementation "com.russhwolf:multiplatform-settings-common:$settings_version"
             }
         }
         commonTest {
             dependencies {
                 implementation 'org.jetbrains.kotlin:kotlin-test'
                 implementation 'org.jetbrains.kotlin:kotlin-test-annotations-common'
+
+                implementation "io.ktor:ktor-client-core:$ktor_version"
+                implementation "io.ktor:ktor-client-json:$ktor_version"
+                implementation "io.ktor:ktor-client-mock:$ktor_version"
             }
         }
 
@@ -52,17 +57,20 @@ kotlin {
 
                 implementation "io.ktor:ktor-client-android:$ktor_version"
                 implementation "io.ktor:ktor-client-core-jvm:$ktor_version"
-                implementation "io.ktor:ktor-client-json:$ktor_version"
-                implementation "io.ktor:ktor-client-gson:$ktor_version"
+                implementation "io.ktor:ktor-client-json-jvm:$ktor_version"
+
+                implementation "com.russhwolf:multiplatform-settings-android:$settings_version"
             }
         }
         androidTest {
             dependencies {
                 implementation 'org.jetbrains.kotlin:kotlin-test-junit'
 
-                implementation "io.ktor:ktor-client-mock:$ktor_version"
-                implementation "io.ktor:ktor-client-json:$ktor_version"
-                implementation "io.ktor:ktor-client-gson:$ktor_version"
+                implementation "io.ktor:ktor-client-core-jvm:$ktor_version"
+                implementation "io.ktor:ktor-client-json-jvm:$ktor_version"
+                implementation "io.ktor:ktor-client-mock-jvm:$ktor_version"
+
+                implementation "com.russhwolf:multiplatform-settings-android:$settings_version"
             }
         }
 
@@ -76,18 +84,17 @@ kotlin {
                 implementation "io.ktor:ktor-client-core-ios:$ktor_version"
                 implementation "io.ktor:ktor-client-json-ios:$ktor_version"
 
-                implementation 'com.russhwolf:multiplatform-settings-ios:0.1.1'
+                implementation "com.russhwolf:multiplatform-settings-ios:$settings_version"
             }
         }
         iosTest {
             dependencies {
+                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:$serialization_version"
+
+                implementation "io.ktor:ktor-client-mock-ios:$ktor_version"
             }
         }
     }
-}
-
-dependencies {
-    api 'com.russhwolf:multiplatform-settings-android:0.1.1'
 }
 
 android {
