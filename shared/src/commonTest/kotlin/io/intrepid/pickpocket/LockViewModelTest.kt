@@ -49,28 +49,25 @@ class LockViewModelTest {
     }
 
     @Test
-    fun `start game`() {
+    fun `start game local`() {
         viewModel.startLocal()
 
         mockViewStateListener.expect(STATE_STARTED)
     }
 
     @Test
+    fun `start game web`() {
+        viewModel.startWeb()
+
+        mockViewStateListener.expect(STATE_STARTED.copy(mode = Mode.WEB))
+    }
+
+    @Test
     fun `incomplete guess`() = runBlocking {
         viewModel.startLocal()
-        viewModel.input("3")
+        viewModel.input('3')
 
-        mockViewStateListener.expect(
-            ViewState(
-                guess = "3",
-                results = listOf(),
-                locked = true,
-                enabled = true,
-                startButtonsVisible = false,
-                resetButtonVisible = true,
-                mode = Mode.LOCAL
-            )
-        )
+        mockViewStateListener.expect(STATE_STARTED.copy(guess = "3"))
     }
 
     @Test
@@ -78,25 +75,19 @@ class LockViewModelTest {
         mockLockProvider.setNextResult(GuessResult(numCorrect = 1, numMisplaced = 1))
 
         viewModel.startLocal()
-        viewModel.input("3")
-        viewModel.input("2")
-        viewModel.input("4")
+        viewModel.input('3')
+        viewModel.input('2')
+        viewModel.input('4')
 
         mockViewStateListener.expect(
-            ViewState(
-                guess = "",
+            STATE_STARTED.copy(
                 results = listOf(
                     GuessListItem(
                         guess = "324",
                         numCorrect = 1,
                         numMisplaced = 1
                     )
-                ),
-                locked = true,
-                enabled = true,
-                startButtonsVisible = false,
-                resetButtonVisible = true,
-                mode = Mode.LOCAL
+                )
             )
         )
     }
@@ -105,17 +96,17 @@ class LockViewModelTest {
     fun `correct guess`() = runBlocking {
         viewModel.startLocal()
         mockLockProvider.setNextResult(GuessResult(numCorrect = 1, numMisplaced = 1))
-        viewModel.input("3")
-        viewModel.input("2")
-        viewModel.input("4")
+        viewModel.input('3')
+        viewModel.input('2')
+        viewModel.input('4')
         mockLockProvider.setNextResult(GuessResult(numCorrect = 0, numMisplaced = 2))
-        viewModel.input("3")
-        viewModel.input("1")
-        viewModel.input("4")
+        viewModel.input('3')
+        viewModel.input('1')
+        viewModel.input('4')
         mockLockProvider.setNextResult(GuessResult(numCorrect = 3, numMisplaced = 0))
-        viewModel.input("1")
-        viewModel.input("2")
-        viewModel.input("3")
+        viewModel.input('1')
+        viewModel.input('2')
+        viewModel.input('3')
 
         mockViewStateListener.expect(
             ViewState(
@@ -149,7 +140,7 @@ class LockViewModelTest {
     @Test
     fun `reset mid-game`() = runBlocking {
         viewModel.startLocal()
-        viewModel.input("3")
+        viewModel.input('3')
         viewModel.reset()
 
         mockViewStateListener.expect(STATE_INITIAL)
@@ -159,9 +150,9 @@ class LockViewModelTest {
     fun `reset post-game`() = runBlocking {
         mockLockProvider.setNextResult(GuessResult(numCorrect = 3, numMisplaced = 0))
         viewModel.startLocal()
-        viewModel.input("1")
-        viewModel.input("2")
-        viewModel.input("3")
+        viewModel.input('1')
+        viewModel.input('2')
+        viewModel.input('3')
         viewModel.reset()
 
         mockViewStateListener.expect(STATE_INITIAL)
@@ -219,9 +210,10 @@ private class MockViewStateListener : ViewStateListener {
 }
 
 // TODO Mock this better in order to test save/load logic
-private class MockSettings: Settings {
+private class MockSettings : Settings {
     @ExperimentalListener
     override fun addListener(key: String, callback: () -> Unit): Settings.Listener = throw NotImplementedError()
+
     override fun clear() = Unit
     override fun getBoolean(key: String, defaultValue: Boolean): Boolean = defaultValue
     override fun getDouble(key: String, defaultValue: Double): Double = defaultValue

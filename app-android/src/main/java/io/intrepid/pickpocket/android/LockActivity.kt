@@ -29,13 +29,13 @@ import io.intrepid.pickpocket.LockViewModel
 import io.intrepid.pickpocket.ViewState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
 @Suppress("ProtectedInFinal")
 class LockActivity : AppCompatActivity(), CoroutineScope {
-    private val job = Job()
+    private val job = SupervisorJob()
     override val coroutineContext: CoroutineContext = job + Dispatchers.Main
 
     private val viewModel: LockArchViewModel by lazy {
@@ -100,12 +100,12 @@ class LockActivity : AppCompatActivity(), CoroutineScope {
         launch {
             viewModel.lockViewModel.input(
                 when (button.id) {
-                    R.id.button_1 -> "1"
-                    R.id.button_2 -> "2"
-                    R.id.button_3 -> "3"
-                    R.id.button_4 -> "4"
-                    R.id.button_5 -> "5"
-                    R.id.button_6 -> "6"
+                    R.id.button_1 -> '1'
+                    R.id.button_2 -> '2'
+                    R.id.button_3 -> '3'
+                    R.id.button_4 -> '4'
+                    R.id.button_5 -> '5'
+                    R.id.button_6 -> '6'
                     else -> throw IllegalArgumentException("Invalid id ${button.id}")
                 }
             )

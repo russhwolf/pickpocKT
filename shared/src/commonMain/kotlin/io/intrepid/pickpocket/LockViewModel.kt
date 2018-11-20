@@ -1,16 +1,16 @@
 package io.intrepid.pickpocket
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.cancelChildren
-import kotlin.coroutines.CoroutineContext
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.boolean
 import com.russhwolf.settings.get
 import com.russhwolf.settings.minusAssign
 import com.russhwolf.settings.set
 import com.russhwolf.settings.string
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.cancelChildren
+import kotlin.coroutines.CoroutineContext
 import kotlin.properties.Delegates
 
 private const val DIGITS = 6
@@ -19,13 +19,13 @@ private const val CODE_LENGTH = 3
 class LockViewModel(
     private val settings: Settings,
     private val webLockProvider: LockProvider = WebLockProvider(httpClientEngine, settings),
-    private val lockProvider: LockProvider = LocalLockProvider(settings),
+    private val localLockProvider: LockProvider = LocalLockProvider(settings),
     private var listener: ViewStateListener? = null
 ) : CoroutineScope {
 
-    override val coroutineContext: CoroutineContext = Job()
+    override val coroutineContext: CoroutineContext = SupervisorJob()
 
-    private var lock: Lock? = lockProvider.loadLock()
+    private var lock: Lock? = localLockProvider.loadLock()
 
     private var state: ViewState by Delegates.observable(ViewState.load(settings)) { _, _, newValue ->
         newValue.save(settings)
@@ -50,7 +50,7 @@ class LockViewModel(
     fun startWeb() = start(Mode.WEB)
     private fun start(mode: Mode) {
         val lockProvider = when (mode) {
-            Mode.LOCAL -> lockProvider
+            Mode.LOCAL -> localLockProvider
             Mode.WEB -> webLockProvider
         }
         val lock = lockProvider.newLock(CODE_LENGTH, DIGITS)
@@ -67,13 +67,14 @@ class LockViewModel(
 
     fun reset() {
         lock = null
-        lockProvider.clearSavedLock()
+        localLockProvider.clearSavedLock()
+        webLockProvider.clearSavedLock()
         state = ViewState()
         coroutineContext.cancelChildren()
     }
 
-    suspend fun input(character: String) {
-        val guess = state.guess + character[0]
+    suspend fun input(character: Char) {
+        val guess = state.guess + character
         if (guess.length == CODE_LENGTH) {
             processGuess(guess)
         } else {
