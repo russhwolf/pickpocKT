@@ -74,12 +74,13 @@ class LockViewModel(
     }
 
     suspend fun input(character: Char) {
+        state = state.copy(enabled = false)
         val guess = state.guess + character
+        state = state.copy(guess = guess)
         if (guess.length == CODE_LENGTH) {
             processGuess(guess)
-        } else {
-            state = state.copy(guess = guess)
         }
+        state = state.copy(enabled = state.locked)
     }
 
     private suspend fun processGuess(guess: String) {
@@ -91,7 +92,6 @@ class LockViewModel(
             guess = "",
             results = state.results + GuessListItem(guess, numCorrect, numMisplaced),
             locked = !complete,
-            enabled = !complete,
             mode = if (complete) null else state.mode
         )
     }
