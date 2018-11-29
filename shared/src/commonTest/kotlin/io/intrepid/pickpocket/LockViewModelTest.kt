@@ -28,6 +28,7 @@ private val STATE_STARTED = ViewState(
 
 class LockViewModelTest {
 
+    private lateinit var mockLock: MockLock
     private lateinit var mockLockProvider: MockLockProvider
     private lateinit var mockSettings: MockSettings
     private lateinit var mockViewStateListener: MockViewStateListener
@@ -36,7 +37,8 @@ class LockViewModelTest {
 
     @BeforeTest
     fun setup() {
-        mockLockProvider = MockLockProvider()
+        mockLock = MockLock()
+        mockLockProvider = MockLockProvider(mockLock)
         mockSettings = MockSettings()
         mockViewStateListener = MockViewStateListener()
 
@@ -72,7 +74,7 @@ class LockViewModelTest {
 
     @Test
     fun `incorrect guess`() = runBlocking {
-        mockLockProvider.setNextResult(GuessResult(numCorrect = 1, numMisplaced = 1))
+        mockLock.setNextResult(GuessResult(numCorrect = 1, numMisplaced = 1))
 
         viewModel.startLocal()
         viewModel.input('3')
@@ -95,15 +97,15 @@ class LockViewModelTest {
     @Test
     fun `correct guess`() = runBlocking {
         viewModel.startLocal()
-        mockLockProvider.setNextResult(GuessResult(numCorrect = 1, numMisplaced = 1))
+        mockLock.setNextResult(GuessResult(numCorrect = 1, numMisplaced = 1))
         viewModel.input('3')
         viewModel.input('2')
         viewModel.input('4')
-        mockLockProvider.setNextResult(GuessResult(numCorrect = 0, numMisplaced = 2))
+        mockLock.setNextResult(GuessResult(numCorrect = 0, numMisplaced = 2))
         viewModel.input('3')
         viewModel.input('1')
         viewModel.input('4')
-        mockLockProvider.setNextResult(GuessResult(numCorrect = 3, numMisplaced = 0))
+        mockLock.setNextResult(GuessResult(numCorrect = 3, numMisplaced = 0))
         viewModel.input('1')
         viewModel.input('2')
         viewModel.input('3')
@@ -138,6 +140,18 @@ class LockViewModelTest {
     }
 
     @Test
+    fun `revert state if web call fails`() = runBlocking {
+        mockLockProvider.lock = MockCrashingLock()
+
+        viewModel.startLocal()
+        viewModel.input('1')
+        viewModel.input('2')
+        viewModel.input('3')
+
+        mockViewStateListener.expect(STATE_STARTED.copy(guess = "12"))
+    }
+
+    @Test
     fun `reset mid-game`() = runBlocking {
         viewModel.startLocal()
         viewModel.input('3')
@@ -148,7 +162,7 @@ class LockViewModelTest {
 
     @Test
     fun `reset post-game`() = runBlocking {
-        mockLockProvider.setNextResult(GuessResult(numCorrect = 3, numMisplaced = 0))
+        mockLock.setNextResult(GuessResult(numCorrect = 3, numMisplaced = 0))
         viewModel.startLocal()
         viewModel.input('1')
         viewModel.input('2')
@@ -177,22 +191,32 @@ class LockViewModelTest {
     }
 }
 
-private class MockLockProvider : LockProvider {
+private class MockLockProvider(var lock: Lock) : LockProvider {
     // TODO better save/load mocks
     override fun loadLock(): Lock? = null
 
     override fun clearSavedLock() = Unit
 
-    override fun newLock(codeLength: Int, digits: Int): Lock = object : Lock {
-        override fun save(settings: Settings) = Unit
+    override fun newLock(codeLength: Int, digits: Int): Lock = lock
+}
 
-        override suspend fun submitGuess(guess: String): GuessResult = result
-    }
-
+private class MockLock : Lock {
     private lateinit var result: GuessResult
 
     fun setNextResult(result: GuessResult) {
         this.result = result
+    }
+
+    override fun save(settings: Settings) = Unit
+
+    override suspend fun submitGuess(guess: String): GuessResult = result
+}
+
+private class MockCrashingLock : Lock {
+    override fun save(settings: Settings) = Unit
+
+    override suspend fun submitGuess(guess: String): GuessResult {
+        throw RuntimeException("Test Error!")
     }
 }
 
