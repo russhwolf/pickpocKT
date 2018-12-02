@@ -17,7 +17,7 @@ class LockClientTest {
 
     @Test
     fun `all correct`() = runBlocking {
-        val client = LockClient(mockEngine(0, 3))
+        val client = LockClient(mockPickLockEngine(0, 3))
         val result = client.pickLock(USER, REQUEST)
         assertEquals(
             PickLockResponse(PickLockResponse.Result(0, 3)),
@@ -28,7 +28,7 @@ class LockClientTest {
 
     @Test
     fun `some correct`() = runBlocking {
-        val client = LockClient(mockEngine(1, 1))
+        val client = LockClient(mockPickLockEngine(1, 1))
         val result = client.pickLock(USER, REQUEST)
         assertEquals(
             PickLockResponse(PickLockResponse.Result(1, 1)),
@@ -37,7 +37,34 @@ class LockClientTest {
         )
     }
 
-    private fun mockEngine(close: Int, correct: Int) = MockEngine {
+    @Test
+    fun `get users`() = runBlocking {
+        val client = LockClient(MockEngine {
+            MockHttpResponse(
+                call = call,
+                status = HttpStatusCode.OK,
+                content = ByteReadChannel(
+                    """{"result":[{"userId":"JackBlack","combinationLength":4},{"userId":"Paul","combinationLength":3},{"userId":"JohnM","combinationLength":4},{"userId":"Jimmy","combinationLength":4}]}"""
+                ),
+                headers = Headers.build { set(HttpHeaders.ContentType, "application/json") }
+            )
+        })
+        val result = client.getUsers()
+
+        assertEquals(
+            GetUsersResponse(
+                listOf(
+                    GetUsersResponse.User("JackBlack", 4),
+                    GetUsersResponse.User("Paul", 3),
+                    GetUsersResponse.User("JohnM", 4),
+                    GetUsersResponse.User("Jimmy", 4)
+                )
+            ),
+            result
+        )
+    }
+
+    private fun mockPickLockEngine(close: Int, correct: Int) = MockEngine {
         // Verify that we serialized our inputs correctly
         assertEquals(
             "https://5gbad1ceal.execute-api.us-east-1.amazonaws.com/release/picklock/Test",

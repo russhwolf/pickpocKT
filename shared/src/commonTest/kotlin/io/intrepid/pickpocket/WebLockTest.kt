@@ -18,6 +18,8 @@ class WebLockTest {
                 verifier.invoke(user, pickLockRequest)
                 return response
             }
+
+            override suspend fun getUsers(): GetUsersResponse = throw NotImplementedError()
         }
         val lock = WebLock("Test", api)
 
