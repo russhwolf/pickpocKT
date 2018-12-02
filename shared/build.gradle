@@ -1,6 +1,7 @@
 apply plugin: 'kotlin-multiplatform'
 apply plugin: 'kotlinx-serialization'
 apply plugin: 'com.android.library'
+apply plugin: 'jacoco'
 
 group = 'io.intrepid.pickpocket'
 version = 1.0
@@ -141,6 +142,24 @@ afterEvaluate { project ->
     }
 
     project.tasks['test'].dependsOn iosTest
+}
+
+jacoco {
+    toolVersion = "0.8.2"
+}
+
+task coverageReportAndroid(type: JacocoReport) {
+    group = "verification"
+    description = "Generate Jacoco coverage report."
+    classDirectories = fileTree(dir: "$buildDir/tmp/kotlin-classes/debug")
+    def coverageSourceDirs = ["src/commonMain/kotlin", "src/androidMain/kotlin"]
+    additionalSourceDirs = files(coverageSourceDirs)
+    sourceDirectories = files(coverageSourceDirs)
+    executionData = files("$buildDir/jacoco/testDebugUnitTest.exec")
+    reports {
+        html.enabled = true
+        xml.enabled = true
+    }
 }
 
 // workaround for https://youtrack.jetbrains.com/issue/KT-27170
