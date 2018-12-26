@@ -18,10 +18,11 @@ kotlin {
     }
 
     sourceSets {
-        def coroutine_version = "1.0.1"
+        def coroutine_version = "1.1.0"
         def serialization_version = "0.9.1"
-        def ktor_version = "1.0.0"
+        def ktor_version = "1.1.1"
         def settings_version = "0.1.1"
+        def iosArch = System.getenv('SDK_NAME')?.startsWith("iphoneos") ? 'arm64' : 'x64'
         commonMain {
             dependencies {
                 implementation 'org.jetbrains.kotlin:kotlin-stdlib-common'
@@ -82,8 +83,8 @@ kotlin {
                 implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:$serialization_version"
 
                 implementation "io.ktor:ktor-client-ios:$ktor_version"
-                implementation "io.ktor:ktor-client-core-ios:$ktor_version"
-                implementation "io.ktor:ktor-client-json-ios:$ktor_version"
+                implementation "io.ktor:ktor-client-core-ios$iosArch:$ktor_version"
+                implementation "io.ktor:ktor-client-json-ios$iosArch:$ktor_version"
 
                 implementation "com.russhwolf:multiplatform-settings-ios:$settings_version"
             }
@@ -92,7 +93,7 @@ kotlin {
             dependencies {
                 implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:$serialization_version"
 
-                implementation "io.ktor:ktor-client-mock-ios:$ktor_version"
+                implementation "io.ktor:ktor-client-mock-ios$iosArch:$ktor_version"
             }
         }
     }
