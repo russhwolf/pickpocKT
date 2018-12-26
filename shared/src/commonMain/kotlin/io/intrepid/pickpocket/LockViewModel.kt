@@ -84,7 +84,8 @@ class LockViewModel(
             }
             state = state.copy(enabled = state.locked)
         } catch (e: Throwable) {
-            print("Error on input! ${e.message}")
+            // TODO logger?
+            println("Error on input! ${e.message}")
             state = prevState
         }
     }
