@@ -10,8 +10,6 @@ import kotlinx.coroutines.io.ByteReadChannel
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-// TODO move this to common (requires common ktor-client-mock; currently JVM-only)
-
 private val USER = "Test"
 private val REQUEST = PickLockRequest("[1,2,3]", "1234567890ABCDEF")
 
