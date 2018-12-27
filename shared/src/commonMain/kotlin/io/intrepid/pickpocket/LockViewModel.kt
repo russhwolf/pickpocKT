@@ -23,11 +23,15 @@ class LockViewModel(
 
     override val coroutineContext: CoroutineContext = SupervisorJob()
 
-    private var lock: Lock? = localLockProvider.loadLock()
-
     private var state: ViewState by Delegates.observable(ViewState.load(settings)) { _, _, newValue ->
         newValue.save(settings)
         listener?.invoke(newValue)
+    }
+
+    private var lock: Lock? = when (state.mode) {
+        Mode.LOCAL -> localLockProvider.loadLock()
+        Mode.WEB -> webLockProvider.loadLock()
+        null -> null
     }
 
     init {
