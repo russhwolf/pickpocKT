@@ -1,11 +1,9 @@
 package io.intrepid.pickpocket
 
 import com.russhwolf.settings.Settings
-import com.russhwolf.settings.boolean
 import com.russhwolf.settings.get
 import com.russhwolf.settings.minusAssign
 import com.russhwolf.settings.set
-import com.russhwolf.settings.string
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
@@ -104,94 +102,68 @@ class LockViewModel(
     }
 }
 
-interface State {
-    val guess: String
-    val results: List<GuessListItem>
-    val locked: Boolean
-    val enabled: Boolean
-    val startButtonsVisible: Boolean
-    val resetButtonVisible: Boolean
-    val mode: Mode?
+data class ViewState(
+    val guess: String = "",
+    val results: List<GuessListItem> = listOf(),
+    val locked: Boolean = true,
+    val enabled: Boolean = false,
+    val startButtonsVisible: Boolean = true,
+    val resetButtonVisible: Boolean = false,
+    val mode: Mode? = null
+) {
+    companion object
 }
 
-data class ViewState(
-    override val guess: String,
-    override val results: List<GuessListItem>,
-    override val locked: Boolean,
-    override val enabled: Boolean,
-    override val startButtonsVisible: Boolean,
-    override val resetButtonVisible: Boolean,
-    override val mode: Mode?
-) : State {
-    companion object {
-        operator fun invoke() = ViewState(
-            guess = "",
-            results = listOf(),
-            locked = true,
-            enabled = false,
-            startButtonsVisible = true,
-            resetButtonVisible = false,
-            mode = null
-        )
+private const val KEY_GUESS = "guess"
+private const val KEY_LOCKED = "locked"
+private const val KEY_ENABLED = "enabled"
+private const val KEY_RESULTS_SIZE = "results_size"
+private const val KEY_START_BUTTONS_VISIBLE = "startButtonsVisible"
+private const val KEY_RESET_BUTTON_VISIBLE = "resetButtonVisible"
+private const val KEY_MODE = "mode"
+private fun resultGuessKey(index: Int) = "results${index}_guess"
+private fun resultNumCorrectKey(index: Int) = "results${index}_numCorrect"
+private fun resultNumMisplacedKey(index: Int) = "results${index}_numMisplaced"
+
+private fun ViewState.save(settings: Settings) {
+    settings[KEY_GUESS] = guess
+    settings[KEY_RESULTS_SIZE] = results.size
+    results.forEachIndexed { index, guessListItem ->
+        settings[resultGuessKey(index)] = guessListItem.guess
+        settings[resultNumCorrectKey(index)] = guessListItem.numCorrect
+        settings[resultNumMisplacedKey(index)] = guessListItem.numMisplaced
+    }
+    settings[KEY_LOCKED] = locked
+    settings[KEY_ENABLED] = enabled
+    settings[KEY_START_BUTTONS_VISIBLE] = startButtonsVisible
+    settings[KEY_RESET_BUTTON_VISIBLE] = resetButtonVisible
+    if (mode == null) {
+        settings -= KEY_MODE
+    } else {
+        settings[KEY_MODE] = mode.name
     }
 }
 
-private fun State.save(settings: Settings): SavedState = SavedState(settings).also {
-    it.guess = this.guess
-    it.locked = this.locked
-    it.enabled = this.enabled
-    it.results = this.results
-    it.startButtonsVisible = this.startButtonsVisible
-    it.resetButtonVisible = this.resetButtonVisible
-    it.mode = this.mode
-}
-
-private fun ViewState.Companion.load(settings: Settings): ViewState = SavedState(settings).let { state ->
+private fun ViewState.Companion.load(settings: Settings): ViewState =
     ViewState(
-        guess = state.guess,
-        results = state.results,
-        locked = state.locked,
-        enabled = state.enabled,
-        startButtonsVisible = state.startButtonsVisible,
-        resetButtonVisible = state.resetButtonVisible,
-        mode = state.mode
-    )
-}
-
-private class SavedState(private val settings: Settings) : State {
-    override var guess by settings.string("guess", "")
-    override var locked: Boolean by settings.boolean("locked", true)
-    override var enabled: Boolean by settings.boolean("enabled", false)
-    override var results: List<GuessListItem>
-        get() = List(settings["results_size", 0]) { index ->
+        guess = settings[KEY_GUESS, ""],
+        results = List(settings[KEY_RESULTS_SIZE, 0]) { index ->
             GuessListItem(
-                guess = settings["results${index}_guess", ""],
-                numCorrect = settings["results${index}_numCorrect", 0],
-                numMisplaced = settings["results${index}_numMisplaced", 0]
+                guess = settings[resultGuessKey(index), ""],
+                numCorrect = settings[resultNumCorrectKey(index), 0],
+                numMisplaced = settings[resultNumMisplacedKey(index), 0]
             )
-        }
-        set(value) {
-            settings["results_size"] = value.size
-            value.forEachIndexed { index, guessListItem ->
-                settings["results${index}_guess"] = guessListItem.guess
-                settings["results${index}_numCorrect"] = guessListItem.numCorrect
-                settings["results${index}_numMisplaced"] = guessListItem.numMisplaced
-            }
-        }
-    override var startButtonsVisible by settings.boolean("startButtonsVisible", true)
-    override var resetButtonVisible by settings.boolean("resetButtonVisible", false)
-    override var mode: Mode?
-        get() = when(settings["mode", ""]) {
+        },
+        locked = settings[KEY_LOCKED, true],
+        enabled = settings[KEY_ENABLED, false],
+        startButtonsVisible = settings[KEY_START_BUTTONS_VISIBLE, true],
+        resetButtonVisible = settings[KEY_RESET_BUTTON_VISIBLE, false],
+        mode = when (settings[KEY_MODE, ""]) {
             Mode.LOCAL.name -> Mode.LOCAL
             Mode.WEB.name -> Mode.WEB
             else -> null
         }
-        set(value) = if (value == null) {
-            settings -= "mode"
-        } else {
-            settings["mode"] = value.name
-        }
-}
+    )
 
 typealias ViewStateListener = (ViewState) -> Unit
 

@@ -6,6 +6,9 @@ import com.russhwolf.settings.get
 import com.russhwolf.settings.minusAssign
 import com.russhwolf.settings.set
 
+private const val KEY_CODE = "code"
+private const val DEFAULT_CODE = "111"
+
 /**
  * This is the Lock class which will hold a secret code and return [GuessResult] responses when guesses are made.
  */
@@ -17,14 +20,15 @@ class LocalLock(private val code: String) : Lock {
     }
 
     override fun save(settings: Settings) {
-        settings["code"] = code
+        settings[KEY_CODE] = code
     }
 
     companion object {
-        fun load(settings: Settings): LocalLock? = if ("code" in settings) LocalLock(settings["code", "111"]) else null
+        fun load(settings: Settings): LocalLock? =
+            if (KEY_CODE in settings) LocalLock(settings[KEY_CODE, DEFAULT_CODE]) else null
 
         fun clear(settings: Settings) {
-            settings -= "code"
+            settings -= KEY_CODE
         }
     }
 }
@@ -45,4 +49,3 @@ private fun totalMatches(guess: String, code: String): Int {
     }
     return 0
 }
-
