@@ -13,8 +13,11 @@ import kotlin.properties.Delegates
 
 class LockViewModel(
     private val settings: Settings,
-    private val webLockProvider: LockProvider = WebLockProvider(httpClientEngine, settings),
-    private val localLockProvider: LockProvider = LocalLockProvider(settings),
+    private val webLockProvider: LockProvider<WebLockProvider.User> = WebLockProvider(
+        LockClient(httpClientEngine),
+        settings
+    ),
+    private val localLockProvider: LockProvider<Int> = LocalLockProvider(settings),
     private var listener: ViewStateListener? = null
 ) : CoroutineScope {
 
@@ -48,11 +51,11 @@ class LockViewModel(
     fun startLocal() = start(Mode.LOCAL)
     fun startWeb() = start(Mode.WEB)
     private fun start(mode: Mode) {
-        val lockProvider = when (mode) {
-            Mode.LOCAL -> localLockProvider
-            Mode.WEB -> webLockProvider
+        // TODO get new lock config via user input
+        val lock = when (mode) {
+            Mode.LOCAL -> localLockProvider.newLock(3)
+            Mode.WEB -> webLockProvider.newLock(WebLockProvider.User("Paul", 3))
         }
-        val lock = lockProvider.newLock()
         this.lock = lock
         lock.save(settings)
         state = state.copy(

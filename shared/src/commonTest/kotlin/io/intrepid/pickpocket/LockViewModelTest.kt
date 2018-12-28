@@ -194,13 +194,13 @@ class LockViewModelTest {
     }
 }
 
-private class MockLockProvider(var lock: Lock) : LockProvider {
+private class MockLockProvider(var lock: Lock) : LockProvider<Any> {
     // TODO better save/load mocks
     override fun loadLock(): Lock? = null
 
     override fun clearSavedLock() = Unit
 
-    override fun newLock(): Lock = lock
+    override fun newLock(config: Any): Lock = lock
 }
 
 private class MockLock : Lock {
