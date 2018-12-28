@@ -1,19 +1,22 @@
 package io.intrepid.pickpocket
 
 import com.russhwolf.settings.Settings
-import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import kotlin.random.Random
 
 interface LockProvider {
-    fun newLock(codeLength: Int, digits: Int): Lock
-
+    fun newLock(): Lock
     fun loadLock(): Lock?
     fun clearSavedLock()
 }
 
 class LocalLockProvider(private val settings: Settings) : LockProvider {
-    override fun newLock(codeLength: Int, digits: Int): LocalLock = LocalLock(newCombo(codeLength, digits))
+    companion object {
+        private const val DIGITS = 6
+        private const val CODE_LENGTH = 3
+    }
+
+    override fun newLock(): LocalLock = LocalLock(newCombo(CODE_LENGTH, DIGITS))
 
     override fun loadLock(): LocalLock? = LocalLock.load(settings)
 
@@ -27,11 +30,12 @@ class LocalLockProvider(private val settings: Settings) : LockProvider {
 
 class WebLockProvider(httpClientEngine: HttpClientEngine, private val settings: Settings) : LockProvider {
     private val name = "Paul" // TODO make name selectable
+    private val codeLength = 3 // TODO make this dynamic
     private val api = LockClient(httpClientEngine)
 
     override fun loadLock(): Lock? = WebLock.load(settings, api)
 
     override fun clearSavedLock() = WebLock.clear(settings)
 
-    override fun newLock(codeLength: Int, digits: Int): Lock = WebLock(name, api)
+    override fun newLock(): Lock = WebLock(name, codeLength, api)
 }

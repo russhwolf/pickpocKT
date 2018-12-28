@@ -11,9 +11,6 @@ import kotlinx.coroutines.cancelChildren
 import kotlin.coroutines.CoroutineContext
 import kotlin.properties.Delegates
 
-private const val DIGITS = 6
-private const val CODE_LENGTH = 3
-
 class LockViewModel(
     private val settings: Settings,
     private val webLockProvider: LockProvider = WebLockProvider(httpClientEngine, settings),
@@ -55,11 +52,12 @@ class LockViewModel(
             Mode.LOCAL -> localLockProvider
             Mode.WEB -> webLockProvider
         }
-        val lock = lockProvider.newLock(CODE_LENGTH, DIGITS)
+        val lock = lockProvider.newLock()
         this.lock = lock
         lock.save(settings)
         state = state.copy(
             enabled = true,
+            codeLength = lock.codeLength,
             startButtonsVisible = false,
             resetButtonVisible = true,
             mode = mode
@@ -81,7 +79,7 @@ class LockViewModel(
             state = state.copy(enabled = false)
             val guess = state.guess + character
             state = state.copy(guess = guess)
-            if (guess.length == CODE_LENGTH) {
+            if (guess.length == lock?.codeLength) {
                 processGuess(guess)
             }
             state = state.copy(enabled = state.locked)
@@ -96,7 +94,7 @@ class LockViewModel(
         val lock = lock ?: return
 
         val (numCorrect, numMisplaced) = lock.submitGuess(guess)
-        val complete = numCorrect == CODE_LENGTH && numMisplaced == 0
+        val complete = numCorrect == lock.codeLength && numMisplaced == 0
         state = state.copy(
             guess = "",
             results = state.results + GuessListItem(guess, numCorrect, numMisplaced),
@@ -108,6 +106,7 @@ class LockViewModel(
 
 data class ViewState(
     val guess: String = "",
+    val codeLength: Int = 0,
     val results: List<GuessListItem> = listOf(),
     val locked: Boolean = true,
     val enabled: Boolean = false,

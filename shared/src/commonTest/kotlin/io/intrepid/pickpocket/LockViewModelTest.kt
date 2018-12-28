@@ -8,6 +8,7 @@ import kotlin.test.assertEquals
 
 private val STATE_INITIAL = ViewState(
     guess = "",
+    codeLength = 0,
     results = listOf(),
     locked = true,
     enabled = false,
@@ -18,6 +19,7 @@ private val STATE_INITIAL = ViewState(
 
 private val STATE_STARTED = ViewState(
     guess = "",
+    codeLength = 3,
     results = listOf(),
     locked = true,
     enabled = true,
@@ -113,6 +115,7 @@ class LockViewModelTest {
         mockViewStateListener.expect(
             ViewState(
                 guess = "",
+                codeLength = 3,
                 results = listOf(
                     GuessListItem(
                         guess = "324",
@@ -197,10 +200,12 @@ private class MockLockProvider(var lock: Lock) : LockProvider {
 
     override fun clearSavedLock() = Unit
 
-    override fun newLock(codeLength: Int, digits: Int): Lock = lock
+    override fun newLock(): Lock = lock
 }
 
 private class MockLock : Lock {
+    override val codeLength: Int = 3
+
     private lateinit var result: GuessResult
 
     fun setNextResult(result: GuessResult) {
@@ -213,6 +218,8 @@ private class MockLock : Lock {
 }
 
 private class MockCrashingLock : Lock {
+    override val codeLength: Int = 3
+
     override fun save(settings: Settings) = Unit
 
     override suspend fun submitGuess(guess: String): GuessResult {

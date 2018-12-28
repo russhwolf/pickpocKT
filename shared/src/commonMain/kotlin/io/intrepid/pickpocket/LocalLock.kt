@@ -13,6 +13,8 @@ private const val DEFAULT_CODE = "111"
  * This is the Lock class which will hold a secret code and return [GuessResult] responses when guesses are made.
  */
 class LocalLock(private val code: String) : Lock {
+    override val codeLength: Int = code.length
+
     override suspend fun submitGuess(guess: String): GuessResult {
         val numCorrect = numCorrect(guess, code)
         val numMisplaced = totalMatches(guess, code) - numCorrect

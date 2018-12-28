@@ -21,7 +21,7 @@ class WebLockTest {
 
             override suspend fun getUsers(): GetUsersResponse = throw NotImplementedError()
         }
-        val lock = WebLock("Test", api)
+        val lock = WebLock("Test", 3, api)
 
         val expected = GuessResult(1, 2)
         val result = lock.submitGuess("123")
