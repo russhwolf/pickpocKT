@@ -48,14 +48,34 @@ class LockViewModel(
         listener?.invoke(state)
     }
 
-    fun startLocal() = start(Mode.LOCAL)
-    fun startWeb() = start(Mode.WEB)
-    private fun start(mode: Mode) {
-        // TODO get new lock config via user input
-        val lock = when (mode) {
-            Mode.LOCAL -> localLockProvider.newLock(3)
-            Mode.WEB -> webLockProvider.newLock(WebLockProvider.User("Paul", 3))
+    fun startLocal() {
+        state = state.copy(localConfigVisible = true)
+    }
+
+    fun startWeb() {
+//        // TODO
+//        state = state.copy(webConfigVisible = true)
+        selectWebUser(WebLockProvider.User("Paul", 3))
+    }
+
+    fun selectLocalLength(codeLengthInput: String) {
+        val codeLength = codeLengthInput.toIntOrNull() ?: 0
+        if (codeLength > 0) {
+            start(Mode.LOCAL, localLockProvider.newLock(codeLength))
+        } else {
+            reset()
         }
+    }
+
+    fun dismissLocalLengthInput() {
+        state = state.copy(localConfigVisible = false)
+    }
+
+    fun selectWebUser(user: WebLockProvider.User) {
+        start(Mode.WEB, webLockProvider.newLock(user))
+    }
+
+    private fun start(mode: Mode, lock: Lock) {
         this.lock = lock
         lock.save(settings)
         state = state.copy(
@@ -63,6 +83,8 @@ class LockViewModel(
             codeLength = lock.codeLength,
             startButtonsVisible = false,
             resetButtonVisible = true,
+            localConfigVisible = false,
+            webConfigVisible = false,
             mode = mode
         )
         coroutineContext.cancelChildren()
@@ -115,6 +137,8 @@ data class ViewState(
     val enabled: Boolean = false,
     val startButtonsVisible: Boolean = true,
     val resetButtonVisible: Boolean = false,
+    val localConfigVisible: Boolean = false,
+    val webConfigVisible: Boolean = false,
     val mode: Mode? = null
 ) {
     companion object

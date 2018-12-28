@@ -31,6 +31,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     lazy var buttons = [button1, button2, button3, button4, button5, button6]
     
+    var inputDialog: UIAlertController? = nil
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -50,6 +52,15 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
             let imageName = state.locked ? "LockClosed" : "LockOpen"
             self.lockImage?.image = UIImage.init(named: imageName)
+            
+            if (state.localConfigVisible) {
+                if (self.inputDialog == nil) {
+                    self.showInputDialog()
+                }
+            } else {
+                self.inputDialog?.dismiss(animated: true, completion: nil)
+                self.inputDialog = nil
+            }
             
             return KotlinUnit()
         })
@@ -119,6 +130,24 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         cell.guessView?.text = items[indexPath.row].guess
         
         return cell
+    }
+    
+    private func showInputDialog() {
+        let inputDialog = UIAlertController(title: "Select Code Length", message: nil, preferredStyle: .alert)
+        
+        inputDialog.addTextField { (textField) in
+            textField.keyboardType = UIKeyboardType.numberPad
+        }
+        inputDialog.addAction(UIAlertAction(title: "OK", style: .default) { (_) in
+            let codeLength = inputDialog.textFields?[0].text ?? ""
+            self.viewModel.selectLocalLength(codeLengthInput: codeLength)
+        })
+        inputDialog.addAction(UIAlertAction(title: "Cancel", style: .cancel) { (_) in
+            self.viewModel.dismissLocalLengthInput()
+        })
+
+        self.inputDialog = inputDialog
+        present(inputDialog, animated: true, completion: nil)
     }
 }
 

@@ -1,14 +1,20 @@
 package io.intrepid.pickpocket.android
 
 import android.app.Application
+import android.app.Dialog
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -32,6 +38,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
+
+private const val TAG_INPUT_DIALOG = "InputDialog"
 
 @Suppress("ProtectedInFinal")
 class LockActivity : AppCompatActivity(), CoroutineScope {
@@ -87,6 +95,14 @@ class LockActivity : AppCompatActivity(), CoroutineScope {
                 0
             )
             adapter.submitList(state.results)
+
+            if (state.localConfigVisible) {
+                if (findInputDialogFragment() == null) {
+                    InputDialogFragment().show(supportFragmentManager, TAG_INPUT_DIALOG)
+                }
+            } else {
+                findInputDialogFragment()?.dismiss()
+            }
         })
     }
 
@@ -94,6 +110,9 @@ class LockActivity : AppCompatActivity(), CoroutineScope {
         job.cancel()
         super.onDestroy()
     }
+
+    private fun findInputDialogFragment() =
+        supportFragmentManager.findFragmentByTag(TAG_INPUT_DIALOG) as? InputDialogFragment
 
     @OnClick(R.id.button_1, R.id.button_2, R.id.button_3, R.id.button_4, R.id.button_5, R.id.button_6)
     protected fun onButtonClick(button: Button) {
@@ -155,6 +174,32 @@ class GuessViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
         guessText.text = item.guess
         correctText.text = item.numCorrect.toString()
         misplacedText.text = item.numMisplaced.toString()
+    }
+}
+
+class InputDialogFragment() : DialogFragment() {
+    private val viewModel: LockArchViewModel by lazy {
+        ViewModelProviders.of(
+            requireActivity(),
+            ViewModelProvider.AndroidViewModelFactory(requireContext().applicationContext as Application)
+        )[LockArchViewModel::class.java]
+    }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val editText = EditText(context).apply {
+            inputType = InputType.TYPE_CLASS_NUMBER
+            imeOptions = EditorInfo.IME_ACTION_DONE
+        }
+        return AlertDialog.Builder(requireContext())
+            .setTitle("Select Code Length")
+            .setView(editText)
+            .setPositiveButton("OK") { _, _ ->
+                viewModel.lockViewModel.selectLocalLength(editText.text.toString())
+            }
+            .setOnDismissListener {
+                viewModel.lockViewModel.dismissLocalLengthInput()
+            }
+            .create()
     }
 }
 
