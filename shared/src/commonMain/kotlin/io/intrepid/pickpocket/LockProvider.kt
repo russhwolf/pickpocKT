@@ -33,5 +33,7 @@ class WebLockProvider(private val api: LockApi, private val settings: Settings) 
 
     override fun newLock(config: User): Lock = WebLock(config.name, config.codeLength, api)
 
-    data class User(val name: String, val codeLength: Int)
+    data class User(val name: String, val codeLength: Int) {
+        override fun toString(): String = "$name (length $codeLength)"
+    }
 }

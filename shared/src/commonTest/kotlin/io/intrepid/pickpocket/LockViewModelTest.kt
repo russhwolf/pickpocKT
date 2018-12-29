@@ -15,7 +15,7 @@ private val STATE_INITIAL = ViewState(
     startButtonsVisible = true,
     resetButtonVisible = false,
     localConfigVisible = false,
-    webConfigVisible = false,
+    webConfigOptions = null,
     mode = null
 )
 
@@ -28,7 +28,7 @@ private val STATE_STARTED = ViewState(
     startButtonsVisible = false,
     resetButtonVisible = true,
     localConfigVisible = false,
-    webConfigVisible = false,
+    webConfigOptions = null,
     mode = Mode.LOCAL
 )
 
@@ -48,7 +48,8 @@ class LockViewModelTest {
         mockSettings = MockSettings()
         mockViewStateListener = MockViewStateListener()
 
-        viewModel = LockViewModel(mockSettings, mockLockProvider, mockLockProvider, mockViewStateListener)
+        viewModel =
+                LockViewModel(mockSettings, MockLockApi(), mockLockProvider, mockLockProvider, mockViewStateListener)
     }
 
     @Test
@@ -64,8 +65,8 @@ class LockViewModelTest {
     }
 
     @Test
-    fun `start game web`() {
-        viewModel.startWeb()
+    fun `start game web`() = runBlocking {
+        viewModel.selectWebUser(WebLockProvider.User("Test", 3))
 
         mockViewStateListener.expect(STATE_STARTED.copy(mode = Mode.WEB))
     }
@@ -142,7 +143,7 @@ class LockViewModelTest {
                 startButtonsVisible = false,
                 resetButtonVisible = true,
                 localConfigVisible = false,
-                webConfigVisible = false,
+                webConfigOptions = null,
                 mode = null
             )
         )
@@ -198,6 +199,13 @@ class LockViewModelTest {
         mockViewStateListener.expect(STATE_INITIAL)
         mockStateListener2.expect(STATE_STARTED)
     }
+}
+
+private class MockLockApi : LockApi {
+    override suspend fun pickLock(user: String, pickLockRequest: PickLockRequest): PickLockResponse =
+        throw NotImplementedError()
+
+    override suspend fun getUsers(): GetUsersResponse = throw NotImplementedError()
 }
 
 private class MockLockProvider(var lock: Lock) : LockProvider<Any> {

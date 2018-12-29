@@ -2,6 +2,7 @@ package io.intrepid.pickpocket.android
 
 import android.app.Application
 import android.app.Dialog
+import android.content.Context
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.text.InputType
@@ -9,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -33,6 +35,7 @@ import com.russhwolf.settings.PlatformSettings
 import io.intrepid.pickpocket.GuessListItem
 import io.intrepid.pickpocket.LockViewModel
 import io.intrepid.pickpocket.ViewState
+import io.intrepid.pickpocket.WebLockProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -40,6 +43,7 @@ import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
 private const val TAG_INPUT_DIALOG = "InputDialog"
+private const val TAG_USERS_DIALOG = "UsersDialog"
 
 @Suppress("ProtectedInFinal")
 class LockActivity : AppCompatActivity(), CoroutineScope {
@@ -73,12 +77,13 @@ class LockActivity : AppCompatActivity(), CoroutineScope {
         setContentView(R.layout.activity_lock)
         ButterKnife.bind(this)
 
-        val adapter = GuessAdapter()
+        val guessAdapter = GuessAdapter()
         val layoutManager = LinearLayoutManager(this).apply { stackFromEnd = true }
         guessList.let {
             it.layoutManager = layoutManager
-            it.adapter = adapter
+            it.adapter = guessAdapter
         }
+        val usersAdapter = UsersAdapter(this)
 
         viewModel.state.observe(this, Observer { state ->
             state ?: return@Observer
@@ -94,7 +99,7 @@ class LockActivity : AppCompatActivity(), CoroutineScope {
                 0,
                 0
             )
-            adapter.submitList(state.results)
+            guessAdapter.submitList(state.results)
 
             if (state.localConfigVisible) {
                 if (findInputDialogFragment() == null) {
@@ -102,6 +107,18 @@ class LockActivity : AppCompatActivity(), CoroutineScope {
                 }
             } else {
                 findInputDialogFragment()?.dismiss()
+            }
+
+            val users = state.webConfigOptions
+            if (users != null) {
+                usersAdapter.setUsers(users)
+                if (findUsersDialogFragment() == null) {
+                    val usersDialogFragment = UsersDialogFragment()
+                    usersDialogFragment.setAdapter(usersAdapter)
+                    usersDialogFragment.show(supportFragmentManager, TAG_INPUT_DIALOG)
+                }
+            } else {
+                findUsersDialogFragment()?.dismiss()
             }
         })
     }
@@ -113,6 +130,9 @@ class LockActivity : AppCompatActivity(), CoroutineScope {
 
     private fun findInputDialogFragment() =
         supportFragmentManager.findFragmentByTag(TAG_INPUT_DIALOG) as? InputDialogFragment
+
+    private fun findUsersDialogFragment() =
+        supportFragmentManager.findFragmentByTag(TAG_USERS_DIALOG) as? InputDialogFragment
 
     @OnClick(R.id.button_1, R.id.button_2, R.id.button_3, R.id.button_4, R.id.button_5, R.id.button_6)
     protected fun onButtonClick(button: Button) {
@@ -138,7 +158,9 @@ class LockActivity : AppCompatActivity(), CoroutineScope {
 
     @OnClick(R.id.start_button_web)
     protected fun onStartWebClick() {
-        viewModel.lockViewModel.startWeb()
+        launch {
+            viewModel.lockViewModel.startWeb()
+        }
     }
 
     @OnClick(R.id.reset_button)
@@ -177,7 +199,7 @@ class GuessViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
     }
 }
 
-class InputDialogFragment() : DialogFragment() {
+class InputDialogFragment : DialogFragment() {
     private val viewModel: LockArchViewModel by lazy {
         ViewModelProviders.of(
             requireActivity(),
@@ -200,6 +222,42 @@ class InputDialogFragment() : DialogFragment() {
                 viewModel.lockViewModel.dismissLocalLengthInput()
             }
             .create()
+    }
+}
+
+class UsersDialogFragment : DialogFragment() {
+    private var adapter: UsersAdapter? = null
+
+    private val viewModel: LockArchViewModel by lazy {
+        ViewModelProviders.of(
+            requireActivity(),
+            ViewModelProvider.AndroidViewModelFactory(requireContext().applicationContext as Application)
+        )[LockArchViewModel::class.java]
+    }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return AlertDialog.Builder(requireContext())
+            .setTitle("Select Lock to Pick")
+            .setAdapter(adapter) { _, which ->
+                viewModel.lockViewModel.selectWebUser(adapter?.getItem(which))
+            }
+            .setOnDismissListener {
+                viewModel.lockViewModel.dismissWebUserInput()
+            }
+            .create()
+    }
+
+    fun setAdapter(adapter: UsersAdapter) {
+        this.adapter = adapter
+    }
+}
+
+class UsersAdapter(context: Context) :
+    ArrayAdapter<WebLockProvider.User>(context, android.R.layout.simple_list_item_1) {
+    fun setUsers(users: List<WebLockProvider.User>) {
+        clear()
+        addAll(users)
+        notifyDataSetChanged()
     }
 }
 

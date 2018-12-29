@@ -32,6 +32,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     lazy var buttons = [button1, button2, button3, button4, button5, button6]
     
     var inputDialog: UIAlertController? = nil
+    var usersDialog: UIAlertController? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -62,6 +63,15 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 self.inputDialog = nil
             }
             
+            if (state.webConfigOptions != nil) {
+                if (self.usersDialog == nil) {
+                    self.showUsersDialog(users: state.webConfigOptions!)
+                }
+            } else {
+                self.usersDialog?.dismiss(animated: true, completion: nil)
+                self.usersDialog = nil
+            }
+            
             return KotlinUnit()
         })
     }
@@ -81,7 +91,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     @IBAction func pressStartWeb() {
-        viewModel.startWeb()
+        IosHelpersKt.launchStartWeb(self, lockViewModel: viewModel)
     }
     
     @IBAction func pressReset() {
@@ -148,6 +158,22 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 
         self.inputDialog = inputDialog
         present(inputDialog, animated: true, completion: nil)
+    }
+    
+    private func showUsersDialog(users: [WebLockProvider.User]) {
+        let usersDialog = UIAlertController(title: "Select Lock to Pick", message: nil, preferredStyle: .actionSheet)
+        
+        for user in users {
+            usersDialog.addAction(UIAlertAction(title: "\(user.name) (length \(user.codeLength))", style: .default) { (action) in
+                self.viewModel.selectWebUser(user: user)
+            })
+        }
+        usersDialog.addAction(UIAlertAction(title: "Cancel", style: .cancel) { (_) in
+            self.viewModel.dismissWebUserInput()
+        })
+        
+        self.usersDialog = usersDialog
+        present(usersDialog, animated: true, completion: nil)
     }
 }
 
