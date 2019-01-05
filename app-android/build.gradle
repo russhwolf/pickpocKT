@@ -52,7 +52,7 @@ dependencies {
     kapt "androidx.lifecycle:lifecycle-compiler:2.0.0"
     testImplementation "androidx.arch.core:core-testing:2.0.0"
 
-    def butterknife_version = "9.0.0-rc3"
+    def butterknife_version = "10.0.0"
     implementation "com.jakewharton:butterknife:$butterknife_version"
     kapt "com.jakewharton:butterknife-compiler:$butterknife_version"
     
