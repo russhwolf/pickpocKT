@@ -12,9 +12,8 @@ import kotlin.properties.Delegates
 
 class LockViewModel(
     private val settings: Settings,
-    private val api: LockApi = LockClient(httpClientEngine),
-    private val webLockProvider: LockProvider<WebLockProvider.User> = WebLockProvider(api, settings),
-    private val localLockProvider: LockProvider<Int> = LocalLockProvider(settings),
+    private val webLockProvider: WebLockProvider = WebLockProviderImpl(LockClient(httpClientEngine), settings),
+    private val localLockProvider: LocalLockProvider = LocalLockProviderImpl(settings),
     private var listener: ViewStateListener? = null
 ) : CoroutineScope {
 
@@ -52,9 +51,8 @@ class LockViewModel(
 
     suspend fun startWeb() {
         // TODO loading UI
-        // TODO clean up serialization repetiton
-        val users = api.getUsers().result.map { WebLockProvider.User(it.userId, it.combinationLength) }
-        state = state.copy(webConfigOptions = users)
+        val users = webLockProvider.getUsers()
+        state = state.copy(webUsers = users)
     }
 
     fun selectLocalLength(codeLengthInput: String) {
@@ -80,7 +78,7 @@ class LockViewModel(
     }
 
     fun dismissWebUserInput() {
-        state = state.copy(webConfigOptions = null)
+        state = state.copy(webUsers = null)
     }
 
     private fun start(mode: Mode, lock: Lock) {
@@ -92,7 +90,7 @@ class LockViewModel(
             startButtonsVisible = false,
             resetButtonVisible = true,
             localConfigVisible = false,
-            webConfigOptions = null,
+            webUsers = null,
             mode = mode
         )
         coroutineContext.cancelChildren()
@@ -146,7 +144,7 @@ data class ViewState(
     val startButtonsVisible: Boolean = true,
     val resetButtonVisible: Boolean = false,
     val localConfigVisible: Boolean = false,
-    val webConfigOptions: List<WebLockProvider.User>? = null,
+    val webUsers: List<WebLockProvider.User>? = null,
     val mode: Mode? = null
 ) {
     companion object

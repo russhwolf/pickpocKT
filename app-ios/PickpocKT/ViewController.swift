@@ -62,9 +62,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 self.inputDialog = nil
             }
             
-            if (state.webConfigOptions != nil) {
+            if (state.webUsers != nil) {
                 if (self.usersDialog == nil) {
-                    self.showUsersDialog(users: state.webConfigOptions!)
+                    self.showUsersDialog(users: state.webUsers!)
                 }
             } else {
                 self.usersDialog?.dismiss(animated: true, completion: nil)
@@ -158,7 +158,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         present(inputDialog, animated: true, completion: nil)
     }
     
-    private func showUsersDialog(users: [WebLockProvider.User]) {
+    private func showUsersDialog(users: [WebLockProviderUser]) {
         let usersDialog = UIAlertController(title: "Select Lock to Pick", message: nil, preferredStyle: .actionSheet)
         
         for user in users {

@@ -15,7 +15,7 @@ private val STATE_INITIAL = ViewState(
     startButtonsVisible = true,
     resetButtonVisible = false,
     localConfigVisible = false,
-    webConfigOptions = null,
+    webUsers = null,
     mode = null
 )
 
@@ -28,14 +28,15 @@ private val STATE_STARTED = ViewState(
     startButtonsVisible = false,
     resetButtonVisible = true,
     localConfigVisible = false,
-    webConfigOptions = null,
+    webUsers = null,
     mode = Mode.LOCAL
 )
 
 class LockViewModelTest {
 
     private lateinit var mockLock: MockLock
-    private lateinit var mockLockProvider: MockLockProvider
+    private lateinit var mockLocalLockProvider: MockLocalLockProvider
+    private lateinit var mockWebLockProvider: MockWebLockProvider
     private lateinit var mockSettings: MockSettings
     private lateinit var mockViewStateListener: MockViewStateListener
 
@@ -44,12 +45,12 @@ class LockViewModelTest {
     @BeforeTest
     fun setup() {
         mockLock = MockLock()
-        mockLockProvider = MockLockProvider(mockLock)
+        mockLocalLockProvider = MockLocalLockProvider(mockLock)
+        mockWebLockProvider = MockWebLockProvider(mockLock)
         mockSettings = MockSettings()
         mockViewStateListener = MockViewStateListener()
 
-        viewModel =
-                LockViewModel(mockSettings, MockLockApi(), mockLockProvider, mockLockProvider, mockViewStateListener)
+        viewModel = LockViewModel(mockSettings, mockWebLockProvider, mockLocalLockProvider, mockViewStateListener)
     }
 
     @Test
@@ -143,7 +144,7 @@ class LockViewModelTest {
                 startButtonsVisible = false,
                 resetButtonVisible = true,
                 localConfigVisible = false,
-                webConfigOptions = null,
+                webUsers = null,
                 mode = null
             )
         )
@@ -151,14 +152,14 @@ class LockViewModelTest {
 
     @Test
     fun `revert state if web call fails`() = runBlocking {
-        mockLockProvider.lock = MockCrashingLock()
+        mockWebLockProvider.lock = MockCrashingLock()
 
-        viewModel.selectLocalLength("3")
+        viewModel.selectWebUser(WebLockProvider.User("Test", 3))
         viewModel.input('1')
         viewModel.input('2')
         viewModel.input('3')
 
-        mockViewStateListener.expect(STATE_STARTED.copy(guess = "12"))
+        mockViewStateListener.expect(STATE_STARTED.copy(mode = Mode.WEB, guess = "12"))
     }
 
     @Test
@@ -201,20 +202,24 @@ class LockViewModelTest {
     }
 }
 
-private class MockLockApi : LockApi {
-    override suspend fun pickLock(user: String, pickLockRequest: PickLockRequest): PickLockResponse =
-        throw NotImplementedError()
-
-    override suspend fun getUsers(): GetUsersResponse = throw NotImplementedError()
-}
-
-private class MockLockProvider(var lock: Lock) : LockProvider<Any> {
+private class MockLocalLockProvider(var lock: Lock) : LocalLockProvider {
     // TODO better save/load mocks
     override fun loadLock(): Lock? = null
 
     override fun clearSavedLock() = Unit
 
-    override fun newLock(config: Any): Lock = lock
+    override fun newLock(length: Int): Lock = lock
+}
+
+private class MockWebLockProvider(var lock: Lock) : WebLockProvider {
+    // TODO better save/load mocks
+    override fun loadLock(): Lock? = null
+
+    override fun clearSavedLock() = Unit
+
+    override fun newLock(user: WebLockProvider.User): Lock = lock
+
+    override suspend fun getUsers(): List<WebLockProvider.User> = throw NotImplementedError()
 }
 
 private class MockLock : Lock {

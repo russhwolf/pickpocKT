@@ -101,7 +101,7 @@ class LockActivity : AppCompatActivity(), CoroutineScope {
 
             updateDialogVisibility(state.localConfigVisible, TAG_INPUT_DIALOG, ::InputDialogFragment)
 
-            val users = state.webConfigOptions
+            val users = state.webUsers
             updateDialogVisibility(users != null, TAG_USERS_DIALOG, ::UsersDialogFragment) {
                 usersAdapter.submitList(users ?: emptyList())
                 setAdapter(usersAdapter)
