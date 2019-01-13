@@ -2,7 +2,7 @@ package io.intrepid.pickpocket.android
 
 import android.app.Application
 import android.app.Dialog
-import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.text.InputType
@@ -10,7 +10,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -23,6 +22,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.get
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
@@ -35,7 +35,7 @@ import com.russhwolf.settings.PlatformSettings
 import io.intrepid.pickpocket.GuessListItem
 import io.intrepid.pickpocket.LockViewModel
 import io.intrepid.pickpocket.ViewState
-import io.intrepid.pickpocket.WebLockProvider
+import io.intrepid.pickpocket.WebLockProvider.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -50,11 +50,11 @@ class LockActivity : AppCompatActivity(), CoroutineScope {
     private val job = SupervisorJob()
     override val coroutineContext: CoroutineContext = job + Dispatchers.Main
 
-    private val viewModel: LockArchViewModel by lazy {
+    private val viewModel: LockAndroidViewModel by lazy {
         ViewModelProviders.of(
             this,
             ViewModelProvider.AndroidViewModelFactory(application)
-        )[LockArchViewModel::class.java]
+        ).get<LockAndroidViewModel>()
     }
 
     @BindView(R.id.guess_list)
@@ -83,7 +83,7 @@ class LockActivity : AppCompatActivity(), CoroutineScope {
             it.layoutManager = layoutManager
             it.adapter = guessAdapter
         }
-        val usersAdapter = UsersAdapter(this)
+        val usersAdapter = UsersAdapter(viewModel.lockViewModel::selectWebUser)
 
         viewModel.state.observe(this, Observer { state ->
             state ?: return@Observer
@@ -101,24 +101,12 @@ class LockActivity : AppCompatActivity(), CoroutineScope {
             )
             guessAdapter.submitList(state.results)
 
-            if (state.localConfigVisible) {
-                if (findInputDialogFragment() == null) {
-                    InputDialogFragment().show(supportFragmentManager, TAG_INPUT_DIALOG)
-                }
-            } else {
-                findInputDialogFragment()?.dismiss()
-            }
+            updateDialogVisibility(state.localConfigVisible, TAG_INPUT_DIALOG, ::InputDialogFragment)
 
             val users = state.webConfigOptions
-            if (users != null) {
-                usersAdapter.setUsers(users)
-                if (findUsersDialogFragment() == null) {
-                    val usersDialogFragment = UsersDialogFragment()
-                    usersDialogFragment.setAdapter(usersAdapter)
-                    usersDialogFragment.show(supportFragmentManager, TAG_INPUT_DIALOG)
-                }
-            } else {
-                findUsersDialogFragment()?.dismiss()
+            updateDialogVisibility(users != null, TAG_USERS_DIALOG, ::UsersDialogFragment) {
+                usersAdapter.submitList(users ?: emptyList())
+                setAdapter(usersAdapter)
             }
         })
     }
@@ -128,26 +116,31 @@ class LockActivity : AppCompatActivity(), CoroutineScope {
         super.onDestroy()
     }
 
-    private fun findInputDialogFragment() =
-        supportFragmentManager.findFragmentByTag(TAG_INPUT_DIALOG) as? InputDialogFragment
-
-    private fun findUsersDialogFragment() =
-        supportFragmentManager.findFragmentByTag(TAG_USERS_DIALOG) as? InputDialogFragment
+    private fun <T : DialogFragment> updateDialogVisibility(
+        visible: Boolean,
+        tag: String,
+        builder: () -> T,
+        initializer: T.() -> Unit = {}
+    ) {
+        @Suppress("UNCHECKED_CAST")
+        val dialog = supportFragmentManager.findFragmentByTag(tag) as? T
+        if (visible) {
+            if (dialog == null) {
+                builder()
+                    .apply(initializer)
+                    .show(supportFragmentManager, tag)
+            } else {
+                dialog.initializer()
+            }
+        } else {
+            dialog?.dismiss()
+        }
+    }
 
     @OnClick(R.id.button_1, R.id.button_2, R.id.button_3, R.id.button_4, R.id.button_5, R.id.button_6)
     protected fun onButtonClick(button: Button) {
         launch {
-            viewModel.lockViewModel.input(
-                when (button.id) {
-                    R.id.button_1 -> '1'
-                    R.id.button_2 -> '2'
-                    R.id.button_3 -> '3'
-                    R.id.button_4 -> '4'
-                    R.id.button_5 -> '5'
-                    R.id.button_6 -> '6'
-                    else -> throw IllegalArgumentException("Invalid id ${button.id}")
-                }
-            )
+            viewModel.lockViewModel.input(resources.getResourceName(button.id).last())
         }
     }
 
@@ -200,11 +193,11 @@ class GuessViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
 }
 
 class InputDialogFragment : DialogFragment() {
-    private val viewModel: LockArchViewModel by lazy {
+    private val viewModel: LockAndroidViewModel by lazy {
         ViewModelProviders.of(
             requireActivity(),
             ViewModelProvider.AndroidViewModelFactory(requireContext().applicationContext as Application)
-        )[LockArchViewModel::class.java]
+        ).get<LockAndroidViewModel>()
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -215,36 +208,49 @@ class InputDialogFragment : DialogFragment() {
         return AlertDialog.Builder(requireContext())
             .setTitle("Select Code Length")
             .setView(editText)
-            .setPositiveButton("OK") { _, _ ->
-                viewModel.lockViewModel.selectLocalLength(editText.text.toString())
-            }
-            .setOnDismissListener {
-                viewModel.lockViewModel.dismissLocalLengthInput()
-            }
+            .setPositiveButton("OK") { _, _ -> viewModel.lockViewModel.selectLocalLength(editText.text.toString()) }
+            .setNegativeButton("Cancel") { _, _ -> dialog.cancel() }
             .create()
+    }
+
+    override fun onCancel(dialog: DialogInterface?) {
+        viewModel.lockViewModel.dismissLocalLengthInput()
+        super.onCancel(dialog)
     }
 }
 
 class UsersDialogFragment : DialogFragment() {
-    private var adapter: UsersAdapter? = null
-
-    private val viewModel: LockArchViewModel by lazy {
+    private val viewModel: LockAndroidViewModel by lazy {
         ViewModelProviders.of(
             requireActivity(),
             ViewModelProvider.AndroidViewModelFactory(requireContext().applicationContext as Application)
-        )[LockArchViewModel::class.java]
+        ).get<LockAndroidViewModel>()
     }
 
+    private var adapter: UsersAdapter? = null
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val recyclerView = RecyclerView(requireContext()).also {
+            it.layoutManager = LinearLayoutManager(requireContext())
+            it.adapter = adapter
+            it.id = android.R.id.list
+        }
         return AlertDialog.Builder(requireContext())
             .setTitle("Select Lock to Pick")
-            .setAdapter(adapter) { _, which ->
-                viewModel.lockViewModel.selectWebUser(adapter?.getItem(which))
-            }
-            .setOnDismissListener {
-                viewModel.lockViewModel.dismissWebUserInput()
-            }
+            .setView(recyclerView)
+            .setNegativeButton("Cancel") { _, _ -> dialog.cancel() }
             .create()
+    }
+
+    override fun onCancel(dialog: DialogInterface?) {
+        viewModel.lockViewModel.dismissWebUserInput()
+        super.onCancel(dialog)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val recyclerView = dialog.findViewById<RecyclerView>(android.R.id.list)
+        recyclerView.adapter = adapter
     }
 
     fun setAdapter(adapter: UsersAdapter) {
@@ -252,24 +258,44 @@ class UsersDialogFragment : DialogFragment() {
     }
 }
 
-class UsersAdapter(context: Context) :
-    ArrayAdapter<WebLockProvider.User>(context, android.R.layout.simple_list_item_1) {
-    fun setUsers(users: List<WebLockProvider.User>) {
-        clear()
-        addAll(users)
-        notifyDataSetChanged()
+class UsersAdapter(private val action: (User) -> Unit) :
+    ListAdapter<User, UserViewHolder>(object : DiffUtil.ItemCallback<User>() {
+        override fun areItemsTheSame(oldItem: User, newItem: User): Boolean = oldItem == newItem
+        override fun areContentsTheSame(oldItem: User, newItem: User): Boolean = oldItem == newItem
+    }) {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder = UserViewHolder(parent, action)
+    override fun onBindViewHolder(holder: UserViewHolder, position: Int) = holder.bind(getItem(position))
+}
+
+@Suppress("ProtectedInFinal")
+class UserViewHolder(parent: ViewGroup, action: (User) -> Unit) : RecyclerView.ViewHolder(
+    LayoutInflater.from(parent.context).inflate(android.R.layout.simple_list_item_1, parent, false)
+) {
+    @BindView(android.R.id.text1)
+    protected lateinit var textView: TextView
+
+    private var item: User? = null
+
+    init {
+        ButterKnife.bind(this, itemView)
+        itemView.setOnClickListener { item?.apply(action) }
+    }
+
+    fun bind(item: User) {
+        this.item = item
+        textView.text = item.toString()
     }
 }
 
-class LockArchViewModel(application: Application) : AndroidViewModel(application) {
-    private val settings = PlatformSettings(PreferenceManager.getDefaultSharedPreferences(application))
-    val lockViewModel = LockViewModel(settings = settings)
+class LockAndroidViewModel(application: Application) : AndroidViewModel(application) {
+    val lockViewModel: LockViewModel
 
     private val mutableState = MutableLiveData<ViewState>()
     val state: LiveData<ViewState> get() = mutableState
 
     init {
-        lockViewModel.setListener { mutableState.value = it }
+        val settings = PlatformSettings(PreferenceManager.getDefaultSharedPreferences(application))
+        lockViewModel = LockViewModel(settings) { mutableState.value = it }
     }
 
     override fun onCleared() {
