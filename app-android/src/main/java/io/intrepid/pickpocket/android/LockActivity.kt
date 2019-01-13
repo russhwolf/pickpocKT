@@ -37,8 +37,6 @@ import io.intrepid.pickpocket.LockViewModel
 import io.intrepid.pickpocket.ViewState
 import io.intrepid.pickpocket.WebLockProvider.User
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
@@ -47,8 +45,6 @@ private const val TAG_USERS_DIALOG = "UsersDialog"
 
 @Suppress("ProtectedInFinal")
 class LockActivity : AppCompatActivity(), CoroutineScope {
-    private val job = SupervisorJob()
-    override val coroutineContext: CoroutineContext = job + Dispatchers.Main
 
     private val viewModel: LockAndroidViewModel by lazy {
         ViewModelProviders.of(
@@ -56,6 +52,8 @@ class LockActivity : AppCompatActivity(), CoroutineScope {
             ViewModelProvider.AndroidViewModelFactory(application)
         ).get<LockAndroidViewModel>()
     }
+
+    override val coroutineContext: CoroutineContext by lazy { viewModel.lockViewModel.coroutineContext }
 
     @BindView(R.id.guess_list)
     protected lateinit var guessList: RecyclerView
@@ -109,11 +107,6 @@ class LockActivity : AppCompatActivity(), CoroutineScope {
                 setAdapter(usersAdapter)
             }
         })
-    }
-
-    override fun onDestroy() {
-        job.cancel()
-        super.onDestroy()
     }
 
     private fun <T : DialogFragment> updateDialogVisibility(

@@ -11,6 +11,4 @@ fun CoroutineScope.launchInput(lockViewModel: LockViewModel, character: String) 
 fun CoroutineScope.launchStartWeb(lockViewModel: LockViewModel) =
     launch { lockViewModel.startWeb() }
 
-fun SupervisorJob() = kotlinx.coroutines.SupervisorJob()
-
 fun createViewModel(defaults: NSUserDefaults) = LockViewModel(PlatformSettings(defaults))

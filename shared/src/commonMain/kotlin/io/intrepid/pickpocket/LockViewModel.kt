@@ -6,7 +6,6 @@ import com.russhwolf.settings.minusAssign
 import com.russhwolf.settings.set
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.cancelChildren
 import kotlin.coroutines.CoroutineContext
 import kotlin.properties.Delegates
@@ -19,7 +18,8 @@ class LockViewModel(
     private var listener: ViewStateListener? = null
 ) : CoroutineScope {
 
-    override val coroutineContext: CoroutineContext = SupervisorJob()
+    private val job = SupervisorJob()
+    override val coroutineContext: CoroutineContext = job + MainDispatcher
 
     private var state: ViewState by Delegates.observable(ViewState.load(settings)) { _, _, newValue ->
         newValue.save(settings)
@@ -38,7 +38,7 @@ class LockViewModel(
 
     fun deinit() {
         listener = null
-        coroutineContext.cancel()
+        job.cancel()
     }
 
     fun setListener(listener: ViewStateListener?) {

@@ -7,6 +7,8 @@ import platform.darwin.dispatch_get_main_queue
 import platform.darwin.dispatch_queue_t
 import kotlin.coroutines.CoroutineContext
 
+actual val MainDispatcher: CoroutineDispatcher = NsQueueDispatcher(dispatch_get_main_queue())
+
 internal class NsQueueDispatcher(
     private val dispatchQueue: dispatch_queue_t
 ) : CoroutineDispatcher() {
@@ -16,5 +18,3 @@ internal class NsQueueDispatcher(
         }
     }
 }
-
-val IosMainDispatcher: CoroutineDispatcher = NsQueueDispatcher(dispatch_get_main_queue())

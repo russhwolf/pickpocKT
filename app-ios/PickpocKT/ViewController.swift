@@ -11,10 +11,9 @@ import shared
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, Kotlinx_coroutines_core_nativeCoroutineScope
 {
-    let job: Kotlinx_coroutines_core_nativeJob = IosHelpersKt.SupervisorJob()
-    lazy var coroutineContext: KotlinCoroutineContext = job.plus(context: NsQueueDispatcherKt.iosMainDispatcher)
-
     let viewModel = IosHelpersKt.createViewModel(defaults: UserDefaults.standard)
+    
+    lazy var coroutineContext: KotlinCoroutineContext = viewModel.coroutineContext
 
     @IBOutlet var guessList: UITableView?
     @IBOutlet var currentGuessView: UILabel?
@@ -78,7 +77,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 
     deinit {
         viewModel.deinit()
-        job.cancel()
     }
 
     override func didReceiveMemoryWarning() {
