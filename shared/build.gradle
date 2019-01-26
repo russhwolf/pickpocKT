@@ -7,24 +7,22 @@ group = 'io.intrepid.pickpocket'
 version = 1.0
 
 kotlin {
-    targets {
-        final def iosTarget = System.getenv('SDK_NAME')?.startsWith("iphoneos") ? presets.iosArm64 : presets.iosX64
-
-        fromPreset(iosTarget, 'ios') {
-            compilations.main.outputKinds('FRAMEWORK')
+    final def iosTarget = System.getenv('SDK_NAME')?.startsWith("iphoneos") ? presets.iosArm64 : presets.iosX64
+    targetFromPreset(iosTarget, "ios") {
+        binaries {
+            framework("Shared")
         }
-
-        fromPreset(presets.android, 'android')
     }
+    android()
 
     sourceSets {
-        def coroutine_version = "1.1.0"
-        def serialization_version = "0.9.1"
-        def ktor_version = "1.1.1"
-        def settings_version = "0.1.1"
+        def coroutine_version = "1.1.1"
+        def serialization_version = "0.10.0"
+        def ktor_version = "1.1.2"
+        def settings_version = "0.2"
         commonMain {
             dependencies {
-                implementation 'org.jetbrains.kotlin:kotlin-stdlib-common'
+                implementation "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
 
                 implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$coroutine_version"
                 
@@ -33,23 +31,25 @@ kotlin {
                 implementation "io.ktor:ktor-client-core:$ktor_version"
                 implementation "io.ktor:ktor-client-json:$ktor_version"
                 
-                implementation "com.russhwolf:multiplatform-settings-common:$settings_version"
+                implementation "com.russhwolf:multiplatform-settings:$settings_version"
             }
         }
         commonTest {
             dependencies {
-                implementation 'org.jetbrains.kotlin:kotlin-test'
-                implementation 'org.jetbrains.kotlin:kotlin-test-annotations-common'
+                implementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
+                implementation "org.jetbrains.kotlin:kotlin-test-annotations-common:$kotlin_version"
 
                 implementation "io.ktor:ktor-client-core:$ktor_version"
                 implementation "io.ktor:ktor-client-json:$ktor_version"
                 implementation "io.ktor:ktor-client-mock:$ktor_version"
+
+                implementation "com.russhwolf:multiplatform-settings:$settings_version"
             }
         }
 
         androidMain {
             dependencies {
-                implementation 'org.jetbrains.kotlin:kotlin-stdlib'
+                implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
                 implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version"
                 implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_version"
@@ -59,19 +59,15 @@ kotlin {
                 implementation "io.ktor:ktor-client-android:$ktor_version"
                 implementation "io.ktor:ktor-client-core-jvm:$ktor_version"
                 implementation "io.ktor:ktor-client-json-jvm:$ktor_version"
-
-                implementation "com.russhwolf:multiplatform-settings-android:$settings_version"
             }
         }
         androidTest {
             dependencies {
-                implementation 'org.jetbrains.kotlin:kotlin-test-junit'
+                implementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
 
                 implementation "io.ktor:ktor-client-core-jvm:$ktor_version"
                 implementation "io.ktor:ktor-client-json-jvm:$ktor_version"
                 implementation "io.ktor:ktor-client-mock-jvm:$ktor_version"
-
-                implementation "com.russhwolf:multiplatform-settings-android:$settings_version"
             }
         }
 
@@ -84,8 +80,6 @@ kotlin {
                 implementation "io.ktor:ktor-client-ios:$ktor_version"
                 implementation "io.ktor:ktor-client-core-native:$ktor_version"
                 implementation "io.ktor:ktor-client-json-native:$ktor_version"
-
-                implementation "com.russhwolf:multiplatform-settings-ios:$settings_version"
             }
         }
         iosTest {
@@ -104,45 +98,40 @@ android {
     defaultConfig {
         minSdkVersion 21
     }
+    buildTypes {
+        debug {
+            // MPP libraries don't currently get this resolution automatically
+            matchingFallbacks = ['release']
+        }
+    }
 }
 
-task packForXCode(type: Sync) {
-    final File frameworkDir = new File(buildDir, "xcode-frameworks")
-    final String mode = System.getenv('CONFIGURATION')?.toUpperCase() ?: 'DEBUG'
-
-    inputs.property "mode", mode
-    dependsOn kotlin.targets.ios.compilations.main.linkTaskName("FRAMEWORK", mode)
-
-    from { kotlin.targets.ios.compilations.main.getBinary("FRAMEWORK", mode).parentFile }
-    into frameworkDir
+task copyFramework {
+    def buildType = project.findProperty('kotlin.build.type') ?: 'DEBUG'
+    def framework = kotlin.targets.ios.compilations.main.target.binaries.findFramework("Shared", buildType)
+    dependsOn framework.linkTask
 
     doLast {
-        new File(frameworkDir, 'gradlew').with {
-            text = "#!/bin/bash\nexport 'JAVA_HOME=${System.getProperty("java.home")}'\ncd '${rootProject.rootDir}'\n./gradlew \$@\n"
-            setExecutable(true)
+        def srcFile = framework.outputFile
+        def targetDir = getProperty('configuration.build.dir')
+        copy {
+            from srcFile.parent
+            into targetDir
+            include 'Shared.framework/**'
+            include 'Shared.framework.dSYM'
         }
     }
 }
 
-tasks.build.dependsOn packForXCode
-
-afterEvaluate { project ->
-    project.task('iosTest') {
-        def device = project.findProperty("iosDevice")?.toString() ?: "iPhone 8"
-        dependsOn 'linkTestDebugExecutableIos'
-        group = JavaBasePlugin.VERIFICATION_GROUP
-        description = "Runs tests for target 'ios' on an iOS simulator"
-
-        doLast {
-            def binary = kotlin.targets.ios.compilations.test.getBinary('EXECUTABLE', 'DEBUG')
-            exec {
-                commandLine 'xcrun', 'simctl', 'spawn', device, binary.absolutePath
-            }
+task iosTest(dependsOn: 'linkTestDebugExecutableIos') {
+    doLast {
+        def binary = kotlin.targets.ios.compilations.test.getBinary('EXECUTABLE', 'DEBUG')
+        exec {
+            commandLine 'xcrun', 'simctl', 'spawn', "iPhone XR", binary.absolutePath
         }
     }
-
-    project.tasks['test'].dependsOn iosTest
 }
+tasks.check.dependsOn iosTest
 
 jacoco {
     toolVersion = "0.8.2"

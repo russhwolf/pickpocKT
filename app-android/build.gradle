@@ -17,6 +17,10 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            // MPP libraries don't currently get this resolution automatically
+            matchingFallbacks = ['release']
+        }
     }
     packagingOptions {
         exclude 'META-INF/*'
@@ -41,11 +45,11 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 
-    def coroutine_version = "1.1.0"
+    def coroutine_version = "1.1.1"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_version"
 
-    def ktor_version = "1.1.1"
+    def ktor_version = "1.1.2"
     implementation "io.ktor:ktor-client-android:$ktor_version"
     implementation "io.ktor:ktor-client-core-jvm:$ktor_version"
     implementation "io.ktor:ktor-client-json:$ktor_version"
@@ -59,5 +63,5 @@ dependencies {
     implementation "com.jakewharton:butterknife:$butterknife_version"
     kapt "com.jakewharton:butterknife-compiler:$butterknife_version"
     
-    implementation 'com.russhwolf:multiplatform-settings-android:0.1.1'
+    implementation 'com.russhwolf:multiplatform-settings:0.2'
 }

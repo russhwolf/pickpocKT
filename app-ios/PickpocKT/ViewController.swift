@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import shared
+import Shared
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, Kotlinx_coroutines_core_nativeCoroutineScope
 {
