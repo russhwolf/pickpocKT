@@ -1,6 +1,5 @@
 package io.intrepid.pickpocket
 
-import com.russhwolf.settings.ExperimentalListener
 import com.russhwolf.settings.Settings
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -261,9 +260,6 @@ private class MockViewStateListener : ViewStateListener {
 
 // TODO Mock this better in order to test save/load logic
 private class MockSettings : Settings {
-    @ExperimentalListener
-    override fun addListener(key: String, callback: () -> Unit): Settings.Listener = throw NotImplementedError()
-
     override fun clear() = Unit
     override fun getBoolean(key: String, defaultValue: Boolean): Boolean = defaultValue
     override fun getDouble(key: String, defaultValue: Double): Double = defaultValue
@@ -279,7 +275,5 @@ private class MockSettings : Settings {
     override fun putLong(key: String, value: Long) = Unit
     override fun putString(key: String, value: String) = Unit
     override fun remove(key: String) = Unit
-    @ExperimentalListener
-    override fun removeListener(listener: Settings.Listener) = Unit
 }
 
