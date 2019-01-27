@@ -124,7 +124,7 @@ class LockActivity : AppCompatActivity(), CoroutineScope {
             if (dialog == null) {
                 builder()
                     .apply(initializer)
-                    .show(supportFragmentManager, tag)
+                    .showNow(supportFragmentManager, tag)
             } else {
                 dialog.initializer()
             }
