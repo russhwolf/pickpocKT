@@ -19,6 +19,8 @@ allprojects {
         maven { url "https://dl.bintray.com/russhwolf/multiplatform-settings" }
         maven { url 'https://dl.bintray.com/kotlin/kotlinx' }
     }
+    // Workaround for https://youtrack.jetbrains.com/issue/KT-28128
+    repositories.each { it.content { excludeGroupByRegex "Kotlin/Native*." } }
 }
 
 task clean(type: Delete) {
