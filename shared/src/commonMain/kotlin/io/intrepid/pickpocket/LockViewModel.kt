@@ -49,8 +49,7 @@ class LockViewModel(
         state = state.copy(localConfigVisible = true)
     }
 
-    suspend fun startWeb() {
-        // TODO loading UI
+    suspend fun startWeb() = withLoadingUi {
         val users = webLockProvider.getUsers()
         state = state.copy(webUsers = users)
     }
@@ -124,14 +123,25 @@ class LockViewModel(
     private suspend fun processGuess(guess: String) {
         val lock = lock ?: return
 
-        val (numCorrect, numMisplaced) = lock.submitGuess(guess)
-        val complete = numCorrect == lock.codeLength && numMisplaced == 0
-        state = state.copy(
-            guess = "",
-            results = state.results + GuessListItem(guess, numCorrect, numMisplaced),
-            locked = !complete,
-            mode = if (complete) null else state.mode
-        )
+        withLoadingUi {
+            val (numCorrect, numMisplaced) = lock.submitGuess(guess)
+            val complete = numCorrect == lock.codeLength && numMisplaced == 0
+            state = state.copy(
+                guess = "",
+                results = state.results + GuessListItem(guess, numCorrect, numMisplaced),
+                locked = !complete,
+                mode = if (complete) null else state.mode
+            )
+        }
+    }
+
+    private suspend fun withLoadingUi(block: suspend () -> Unit) {
+        state = state.copy(loading = true)
+        try {
+            block()
+        } finally {
+            state = state.copy(loading = false)
+        }
     }
 }
 
@@ -145,7 +155,8 @@ data class ViewState(
     val resetButtonVisible: Boolean = false,
     val localConfigVisible: Boolean = false,
     val webUsers: List<WebLockProvider.User>? = null,
-    val mode: Mode? = null
+    val mode: Mode? = null,
+    val loading: Boolean = false
 ) {
     companion object
 }

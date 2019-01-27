@@ -27,6 +27,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBOutlet var startLocalButton: UIButton?
     @IBOutlet var startWebButton: UIButton?
     @IBOutlet var resetButton: UIButton?
+    @IBOutlet var loadingIndicator: UIActivityIndicatorView?
+    
     
     lazy var buttons = [button1, button2, button3, button4, button5, button6]
     
@@ -51,7 +53,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             self.setItems(items: state.results)
             
             let imageName = state.locked ? "LockClosed" : "LockOpen"
-            self.lockImage?.image = UIImage.init(named: imageName)
+            self.lockImage?.image = UIImage(named: imageName)
+            
+            if (state.loading) {
+                self.loadingIndicator?.startAnimating()
+            } else {
+                self.loadingIndicator?.stopAnimating()
+            }
             
             if (state.localConfigVisible) {
                 if (self.inputDialog == nil) {

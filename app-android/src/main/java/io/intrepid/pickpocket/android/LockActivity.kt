@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -40,6 +41,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
+private const val TAG_LOADING_DIALOG = "LoadingDialog"
 private const val TAG_INPUT_DIALOG = "InputDialog"
 private const val TAG_USERS_DIALOG = "UsersDialog"
 
@@ -99,6 +101,7 @@ class LockActivity : AppCompatActivity(), CoroutineScope {
             )
             guessAdapter.submitList(state.results)
 
+            updateDialogVisibility(state.loading, TAG_LOADING_DIALOG, ::LoadingDialogFragment)
             updateDialogVisibility(state.localConfigVisible, TAG_INPUT_DIALOG, ::InputDialogFragment)
 
             val users = state.webUsers
@@ -182,6 +185,26 @@ class GuessViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
         guessText.text = item.guess
         correctText.text = item.numCorrect.toString()
         misplacedText.text = item.numMisplaced.toString()
+    }
+}
+
+class LoadingDialogFragment : DialogFragment() {
+    private val viewModel: LockAndroidViewModel by lazy {
+        ViewModelProviders.of(
+            requireActivity(),
+            ViewModelProvider.AndroidViewModelFactory(requireContext().applicationContext as Application)
+        ).get<LockAndroidViewModel>()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.state.observe(viewLifecycleOwner, Observer {
+            if (!it.loading) dialog?.cancel()
+        })
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return ProgressBar(requireContext())
     }
 }
 
