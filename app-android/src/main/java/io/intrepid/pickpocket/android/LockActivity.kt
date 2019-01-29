@@ -57,6 +57,9 @@ class LockActivity : AppCompatActivity(), CoroutineScope {
 
     override val coroutineContext: CoroutineContext by lazy { viewModel.lockViewModel.coroutineContext }
 
+    @BindView(R.id.lock_name)
+    protected lateinit var lockNameText: TextView
+
     @BindView(R.id.guess_list)
     protected lateinit var guessList: RecyclerView
 
@@ -93,7 +96,8 @@ class LockActivity : AppCompatActivity(), CoroutineScope {
 
             buttons.forEach { it.isEnabled = state.enabled }
             currentGuessText.text = state.guess
-            currentGuessText.setCompoundDrawablesWithIntrinsicBounds(
+            lockNameText.text = state.lockName
+            lockNameText.setCompoundDrawablesWithIntrinsicBounds(
                 if (state.locked) R.drawable.ic_lock_black_24dp else R.drawable.ic_lock_open_black_24dp,
                 0,
                 0,

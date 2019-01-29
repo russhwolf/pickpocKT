@@ -15,6 +15,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     lazy var coroutineContext: KotlinCoroutineContext = viewModel.coroutineContext
 
+    @IBOutlet var lockNameView: UILabel?
     @IBOutlet var guessList: UITableView?
     @IBOutlet var currentGuessView: UILabel?
     @IBOutlet var button1: UIButton?
@@ -54,6 +55,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
             let imageName = state.locked ? "LockClosed" : "LockOpen"
             self.lockImage?.image = UIImage(named: imageName)
+            
+            self.lockNameView?.text = state.lockName
             
             if (state.loading) {
                 self.loadingIndicator?.startAnimating()

@@ -90,7 +90,8 @@ class LockViewModel(
             resetButtonVisible = true,
             localConfigVisible = false,
             webUsers = null,
-            mode = mode
+            mode = mode,
+            lockName = lock.uiName
         )
         coroutineContext.cancelChildren()
     }
@@ -143,6 +144,8 @@ class LockViewModel(
             state = state.copy(loading = false)
         }
     }
+
+    private val Lock.uiName get() = "$name (length $codeLength)"
 }
 
 data class ViewState(
@@ -156,7 +159,8 @@ data class ViewState(
     val localConfigVisible: Boolean = false,
     val webUsers: List<WebLockProvider.User>? = null,
     val mode: Mode? = null,
-    val loading: Boolean = false
+    val loading: Boolean = false,
+    val lockName: String = ""
 ) {
     companion object
 }
@@ -168,6 +172,7 @@ private const val KEY_RESULTS_SIZE = "results_size"
 private const val KEY_START_BUTTONS_VISIBLE = "startButtonsVisible"
 private const val KEY_RESET_BUTTON_VISIBLE = "resetButtonVisible"
 private const val KEY_MODE = "mode"
+private const val KEY_LOCK_NAME = "lockName"
 private fun resultGuessKey(index: Int) = "results${index}_guess"
 private fun resultNumCorrectKey(index: Int) = "results${index}_numCorrect"
 private fun resultNumMisplacedKey(index: Int) = "results${index}_numMisplaced"
@@ -189,6 +194,7 @@ private fun ViewState.save(settings: Settings) {
     } else {
         settings[KEY_MODE] = mode.name
     }
+    settings[KEY_LOCK_NAME] = lockName
 }
 
 private fun ViewState.Companion.load(settings: Settings): ViewState =
@@ -209,7 +215,8 @@ private fun ViewState.Companion.load(settings: Settings): ViewState =
             Mode.LOCAL.name -> Mode.LOCAL
             Mode.WEB.name -> Mode.WEB
             else -> null
-        }
+        },
+        lockName = settings[KEY_LOCK_NAME, ""]
     )
 
 typealias ViewStateListener = (ViewState) -> Unit

@@ -10,17 +10,16 @@ private const val API_TOKEN = "331f6ac6-3a63-11e7-ae72-12ad2ae1db2b"
 private const val KEY_WEB_LOCK_NAME = "web_lock_name"
 private const val KEY_WEB_LOCK_LENGTH = "web_lock_length"
 
-class WebLock(private val user: String, override val codeLength: Int, private val api: LockApi) : Lock {
-
+class WebLock(override val name: String, override val codeLength: Int, private val api: LockApi) : Lock {
     override fun save(settings: Settings) {
-        settings[KEY_WEB_LOCK_NAME] = user
+        settings[KEY_WEB_LOCK_NAME] = name
         settings[KEY_WEB_LOCK_LENGTH] = codeLength
     }
 
     override suspend fun submitGuess(guess: String): GuessResult {
         val formattedGuess = guess.toList().joinToString(prefix = "[", postfix = "]", separator = ",")
         val result = try {
-            api.pickLock(user, PickLockRequest(formattedGuess, API_TOKEN)).result
+            api.pickLock(name, PickLockRequest(formattedGuess, API_TOKEN)).result
         } catch (e: Exception) {
             error("${e::class.simpleName}: ${e.message}")
         }

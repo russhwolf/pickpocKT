@@ -14,6 +14,7 @@ private const val DEFAULT_CODE = "111"
  */
 class LocalLock(private val code: String) : Lock {
     override val codeLength: Int = code.length
+    override val name: String = "Local Lock"
 
     override suspend fun submitGuess(guess: String): GuessResult {
         val numCorrect = numCorrect(guess, code)

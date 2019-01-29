@@ -15,7 +15,8 @@ private val STATE_INITIAL = ViewState(
     resetButtonVisible = false,
     localConfigVisible = false,
     webUsers = null,
-    mode = null
+    mode = null,
+    lockName = ""
 )
 
 private val STATE_STARTED = ViewState(
@@ -28,7 +29,8 @@ private val STATE_STARTED = ViewState(
     resetButtonVisible = true,
     localConfigVisible = false,
     webUsers = null,
-    mode = Mode.LOCAL
+    mode = Mode.LOCAL,
+    lockName = "MockLock (length 3)"
 )
 
 class LockViewModelTest {
@@ -144,7 +146,8 @@ class LockViewModelTest {
                 resetButtonVisible = true,
                 localConfigVisible = false,
                 webUsers = null,
-                mode = null
+                mode = null,
+                lockName = "MockLock (length 3)"
             )
         )
     }
@@ -223,6 +226,7 @@ private class MockWebLockProvider(var lock: Lock) : WebLockProvider {
 
 private class MockLock : Lock {
     override val codeLength: Int = 3
+    override val name: String = "MockLock"
 
     private lateinit var result: GuessResult
 
@@ -237,6 +241,7 @@ private class MockLock : Lock {
 
 private class MockCrashingLock : Lock {
     override val codeLength: Int = 3
+    override val name: String = "MockLock"
 
     override fun save(settings: Settings) = Unit
 

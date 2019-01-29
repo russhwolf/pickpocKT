@@ -4,6 +4,7 @@ import com.russhwolf.settings.Settings
 
 interface Lock {
     val codeLength: Int
+    val name: String
 
     suspend fun submitGuess(guess: String): GuessResult
 
