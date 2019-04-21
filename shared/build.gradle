@@ -16,10 +16,10 @@ kotlin {
     android()
 
     sourceSets {
-        def coroutine_version = "1.1.1"
-        def serialization_version = "0.10.0"
-        def ktor_version = "1.1.2"
-        def settings_version = "0.2"
+        def coroutine_version = "1.2.0"
+        def serialization_version = "0.11.0"
+        def ktor_version = "1.1.4"
+        def settings_version = "0.3"
         commonMain {
             dependencies {
                 implementation "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
@@ -127,7 +127,7 @@ task iosTest(dependsOn: 'linkTestDebugExecutableIos') {
     doLast {
         def binary = kotlin.targets.ios.compilations.test.getBinary('EXECUTABLE', 'DEBUG')
         exec {
-            commandLine 'xcrun', 'simctl', 'spawn', "iPhone XR", binary.absolutePath
+            commandLine 'xcrun', 'simctl', 'spawn', "iPhone Xʀ", binary.absolutePath
         }
     }
 }

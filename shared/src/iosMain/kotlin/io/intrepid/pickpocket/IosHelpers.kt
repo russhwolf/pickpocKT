@@ -1,6 +1,6 @@
 package io.intrepid.pickpocket
 
-import com.russhwolf.settings.PlatformSettings
+import com.russhwolf.settings.AppleSettings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import platform.Foundation.NSUserDefaults
@@ -11,4 +11,4 @@ fun CoroutineScope.launchInput(lockViewModel: LockViewModel, character: String) 
 fun CoroutineScope.launchStartWeb(lockViewModel: LockViewModel) =
     launch { lockViewModel.startWeb() }
 
-fun createViewModel(defaults: NSUserDefaults) = LockViewModel(PlatformSettings(defaults))
+fun createViewModel(defaults: NSUserDefaults) = LockViewModel(AppleSettings(defaults))

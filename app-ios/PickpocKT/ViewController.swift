@@ -9,7 +9,7 @@
 import UIKit
 import Shared
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, Kotlinx_coroutines_core_nativeCoroutineScope
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, Kotlinx_coroutines_coreCoroutineScope
 {
     let viewModel = IosHelpersKt.createViewModel(defaults: UserDefaults.standard)
     

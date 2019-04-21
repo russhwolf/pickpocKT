@@ -32,7 +32,7 @@ import butterknife.BindView
 import butterknife.BindViews
 import butterknife.ButterKnife
 import butterknife.OnClick
-import com.russhwolf.settings.PlatformSettings
+import com.russhwolf.settings.AndroidSettings
 import io.intrepid.pickpocket.GuessListItem
 import io.intrepid.pickpocket.LockViewModel
 import io.intrepid.pickpocket.ViewState
@@ -314,7 +314,7 @@ class LockAndroidViewModel(application: Application) : AndroidViewModel(applicat
     val state: LiveData<ViewState> get() = mutableState
 
     init {
-        val settings = PlatformSettings(PreferenceManager.getDefaultSharedPreferences(application))
+        val settings = AndroidSettings(PreferenceManager.getDefaultSharedPreferences(application))
         lockViewModel = LockViewModel(settings) { mutableState.value = it }
     }
 
