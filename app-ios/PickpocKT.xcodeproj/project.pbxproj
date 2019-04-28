@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		08C790DF23C34039B7455030 /* LocalLockProvider.kt in Sources */ = {isa = PBXBuildFile; fileRef = 61524B4B15FA66C32F0FAA05 /* LocalLockProvider.kt */; settings = {COMPILER_FLAGS = "-w"; }; };
+		133038B7085BC55DA65F7851 /* runBlocking.kt in Sources */ = {isa = PBXBuildFile; fileRef = 00F9CF5E136FC5A841CB5904 /* runBlocking.kt */; settings = {COMPILER_FLAGS = "-w"; }; };
+		23E0A9CC68A512E85ECED76A /* LockApi.kt in Sources */ = {isa = PBXBuildFile; fileRef = 2608AA5F4370E6F735DE1866 /* LockApi.kt */; settings = {COMPILER_FLAGS = "-w"; }; };
+		2F205FD34D52A33F7E51AF52 /* WebLockProvider.kt in Sources */ = {isa = PBXBuildFile; fileRef = 8F3997964A1069907D2B3127 /* WebLockProvider.kt */; settings = {COMPILER_FLAGS = "-w"; }; };
+		32A2A57B46D01B99D5B150E6 /* LockViewModel.kt in Sources */ = {isa = PBXBuildFile; fileRef = E072FAA4693B12201F2C3835 /* LockViewModel.kt */; settings = {COMPILER_FLAGS = "-w"; }; };
+		448D825A8C1B33EE8F5E069B /* IosHelpers.kt in Sources */ = {isa = PBXBuildFile; fileRef = 263670375D0F0618BD9A484F /* IosHelpers.kt */; settings = {COMPILER_FLAGS = "-w"; }; };
 		465611FD21FD1F7E00409CFD /* Shared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 465611E821FD1F7E00409CFD /* Shared.framework */; };
 		465611FE21FD1F7E00409CFD /* Shared.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 465611E821FD1F7E00409CFD /* Shared.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		46E7E30D20E9A6600041145B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E7E30C20E9A6600041145B /* AppDelegate.swift */; };
@@ -17,6 +23,21 @@
 		46E7E32220E9A6620041145B /* app_iosTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E7E32120E9A6620041145B /* app_iosTests.swift */; };
 		46E7E32D20E9A6620041145B /* app_iosUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E7E32C20E9A6620041145B /* app_iosUITests.swift */; };
 		46E7E37C20E9B1F20041145B /* GuessListCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 46E7E37B20E9B1F20041145B /* GuessListCell.xib */; };
+		55CF3BD7AC8DF10605F99B07 /* runBlocking.kt in Sources */ = {isa = PBXBuildFile; fileRef = 2F5F749BFB64C7AD95D5CDB5 /* runBlocking.kt */; settings = {COMPILER_FLAGS = "-w"; }; };
+		65A81AD31439EBB6FEE142AF /* LocalLock.kt in Sources */ = {isa = PBXBuildFile; fileRef = 10D50FE5E082B8F7D85164D2 /* LocalLock.kt */; settings = {COMPILER_FLAGS = "-w"; }; };
+		66B643E8449EDCF3744B2554 /* runBlocking.kt in Sources */ = {isa = PBXBuildFile; fileRef = D704B537A4A3F335B8867264 /* runBlocking.kt */; settings = {COMPILER_FLAGS = "-w"; }; };
+		88AEFC65F2141304DBEC23F8 /* httpClientEngine.kt in Sources */ = {isa = PBXBuildFile; fileRef = 975065504B8D123FA4C40D3F /* httpClientEngine.kt */; settings = {COMPILER_FLAGS = "-w"; }; };
+		9406FDC545233B089D54F2D7 /* Lock.kt in Sources */ = {isa = PBXBuildFile; fileRef = 318451B96B6732F690AFD921 /* Lock.kt */; settings = {COMPILER_FLAGS = "-w"; }; };
+		98F2FA7F5692D9B7FAD0FB14 /* WebLock.kt in Sources */ = {isa = PBXBuildFile; fileRef = A746F3AE30E43C44F152DA21 /* WebLock.kt */; settings = {COMPILER_FLAGS = "-w"; }; };
+		AAA2BB5A6CE51C02E54DC297 /* WebLockTest.kt in Sources */ = {isa = PBXBuildFile; fileRef = 08DD588A5AEA790C29E0DDCC /* WebLockTest.kt */; settings = {COMPILER_FLAGS = "-w"; }; };
+		B8A3D3655C418BC56CA5B2F4 /* MainDispatcher.kt in Sources */ = {isa = PBXBuildFile; fileRef = 9296EE265F2AB06B03B36ED6 /* MainDispatcher.kt */; settings = {COMPILER_FLAGS = "-w"; }; };
+		BC878F408A785871B4539025 /* LockViewModelTest.kt in Sources */ = {isa = PBXBuildFile; fileRef = 73E6ED9A037A39C2EB27B688 /* LockViewModelTest.kt */; settings = {COMPILER_FLAGS = "-w"; }; };
+		BDFC3885CCFCE8AC144E2AB5 /* LockClientTest.kt in Sources */ = {isa = PBXBuildFile; fileRef = E3152C6E73A6A51805DBF637 /* LockClientTest.kt */; settings = {COMPILER_FLAGS = "-w"; }; };
+		C2EE00D76BEFB417C1B736B8 /* MainDispatcher.kt in Sources */ = {isa = PBXBuildFile; fileRef = 7252D2C08F1F8A3CC82CC4AB /* MainDispatcher.kt */; settings = {COMPILER_FLAGS = "-w"; }; };
+		E2F15EF964B4CC94EE751D99 /* MainDispatcher.kt in Sources */ = {isa = PBXBuildFile; fileRef = E51CC3EBDC2AF402B13D2281 /* MainDispatcher.kt */; settings = {COMPILER_FLAGS = "-w"; }; };
+		FA4CE1EABD9F9694CFF2D6AF /* httpClientEngine.kt in Sources */ = {isa = PBXBuildFile; fileRef = D28991A95C6B24BD6AF67561 /* httpClientEngine.kt */; settings = {COMPILER_FLAGS = "-w"; }; };
+		FD80F571856BBC79A1AFB150 /* LocalLockTest.kt in Sources */ = {isa = PBXBuildFile; fileRef = AF3AA158CF773EBC0EC105EF /* LocalLockTest.kt */; settings = {COMPILER_FLAGS = "-w"; }; };
+		FF8FDF1372EEC41CB6F46DD1 /* httpClientEngine.kt in Sources */ = {isa = PBXBuildFile; fileRef = 77C5252D78713C7DC982794D /* httpClientEngine.kt */; settings = {COMPILER_FLAGS = "-w"; }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +79,13 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		00F9CF5E136FC5A841CB5904 /* runBlocking.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = runBlocking.kt; path = ../shared/src/androidMain/kotlin/io/intrepid/pickpocket/runBlocking.kt; sourceTree = "<group>"; };
+		08DD588A5AEA790C29E0DDCC /* WebLockTest.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = WebLockTest.kt; path = ../shared/src/commonTest/kotlin/io/intrepid/pickpocket/WebLockTest.kt; sourceTree = "<group>"; };
+		10D50FE5E082B8F7D85164D2 /* LocalLock.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = LocalLock.kt; path = ../shared/src/commonMain/kotlin/io/intrepid/pickpocket/LocalLock.kt; sourceTree = "<group>"; };
+		2608AA5F4370E6F735DE1866 /* LockApi.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = LockApi.kt; path = ../shared/src/commonMain/kotlin/io/intrepid/pickpocket/LockApi.kt; sourceTree = "<group>"; };
+		263670375D0F0618BD9A484F /* IosHelpers.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = IosHelpers.kt; path = ../shared/src/iosMain/kotlin/io/intrepid/pickpocket/IosHelpers.kt; sourceTree = "<group>"; };
+		2F5F749BFB64C7AD95D5CDB5 /* runBlocking.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = runBlocking.kt; path = ../shared/src/iosMain/kotlin/io/intrepid/pickpocket/runBlocking.kt; sourceTree = "<group>"; };
+		318451B96B6732F690AFD921 /* Lock.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = Lock.kt; path = ../shared/src/commonMain/kotlin/io/intrepid/pickpocket/Lock.kt; sourceTree = "<group>"; };
 		465611E821FD1F7E00409CFD /* Shared.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Shared.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		465611EA21FD1F7E00409CFD /* Shared.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Shared.h; sourceTree = "<group>"; };
 		465611EB21FD1F7E00409CFD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -75,6 +103,20 @@
 		46E7E32C20E9A6620041145B /* app_iosUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = app_iosUITests.swift; sourceTree = "<group>"; };
 		46E7E32E20E9A6620041145B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		46E7E37B20E9B1F20041145B /* GuessListCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GuessListCell.xib; sourceTree = "<group>"; };
+		61524B4B15FA66C32F0FAA05 /* LocalLockProvider.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = LocalLockProvider.kt; path = ../shared/src/commonMain/kotlin/io/intrepid/pickpocket/LocalLockProvider.kt; sourceTree = "<group>"; };
+		7252D2C08F1F8A3CC82CC4AB /* MainDispatcher.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = MainDispatcher.kt; path = ../shared/src/commonMain/kotlin/io/intrepid/pickpocket/MainDispatcher.kt; sourceTree = "<group>"; };
+		73E6ED9A037A39C2EB27B688 /* LockViewModelTest.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = LockViewModelTest.kt; path = ../shared/src/commonTest/kotlin/io/intrepid/pickpocket/LockViewModelTest.kt; sourceTree = "<group>"; };
+		77C5252D78713C7DC982794D /* httpClientEngine.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = httpClientEngine.kt; path = ../shared/src/androidMain/kotlin/io/intrepid/pickpocket/httpClientEngine.kt; sourceTree = "<group>"; };
+		8F3997964A1069907D2B3127 /* WebLockProvider.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = WebLockProvider.kt; path = ../shared/src/commonMain/kotlin/io/intrepid/pickpocket/WebLockProvider.kt; sourceTree = "<group>"; };
+		9296EE265F2AB06B03B36ED6 /* MainDispatcher.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = MainDispatcher.kt; path = ../shared/src/androidMain/kotlin/io/intrepid/pickpocket/MainDispatcher.kt; sourceTree = "<group>"; };
+		975065504B8D123FA4C40D3F /* httpClientEngine.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = httpClientEngine.kt; path = ../shared/src/commonMain/kotlin/io/intrepid/pickpocket/httpClientEngine.kt; sourceTree = "<group>"; };
+		A746F3AE30E43C44F152DA21 /* WebLock.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = WebLock.kt; path = ../shared/src/commonMain/kotlin/io/intrepid/pickpocket/WebLock.kt; sourceTree = "<group>"; };
+		AF3AA158CF773EBC0EC105EF /* LocalLockTest.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = LocalLockTest.kt; path = ../shared/src/commonTest/kotlin/io/intrepid/pickpocket/LocalLockTest.kt; sourceTree = "<group>"; };
+		D28991A95C6B24BD6AF67561 /* httpClientEngine.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = httpClientEngine.kt; path = ../shared/src/iosMain/kotlin/io/intrepid/pickpocket/httpClientEngine.kt; sourceTree = "<group>"; };
+		D704B537A4A3F335B8867264 /* runBlocking.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = runBlocking.kt; path = ../shared/src/commonMain/kotlin/io/intrepid/pickpocket/runBlocking.kt; sourceTree = "<group>"; };
+		E072FAA4693B12201F2C3835 /* LockViewModel.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = LockViewModel.kt; path = ../shared/src/commonMain/kotlin/io/intrepid/pickpocket/LockViewModel.kt; sourceTree = "<group>"; };
+		E3152C6E73A6A51805DBF637 /* LockClientTest.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = LockClientTest.kt; path = ../shared/src/commonTest/kotlin/io/intrepid/pickpocket/LockClientTest.kt; sourceTree = "<group>"; };
+		E51CC3EBDC2AF402B13D2281 /* MainDispatcher.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = MainDispatcher.kt; path = ../shared/src/iosMain/kotlin/io/intrepid/pickpocket/MainDispatcher.kt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +145,75 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0415A4DFB3DF8EEDE303C65E /* pickpocket */ = {
+			isa = PBXGroup;
+			children = (
+				00F9CF5E136FC5A841CB5904 /* runBlocking.kt */,
+				77C5252D78713C7DC982794D /* httpClientEngine.kt */,
+				9296EE265F2AB06B03B36ED6 /* MainDispatcher.kt */,
+			);
+			name = pickpocket;
+			sourceTree = "<group>";
+		};
+		09F2F959791529D619F080F3 /* main */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = main;
+			sourceTree = "<group>";
+		};
+		10E9424BBD1ED329A1CF97BB /* intrepid */ = {
+			isa = PBXGroup;
+			children = (
+				2E8B5A2ED94A474CB60860B6 /* pickpocket */,
+			);
+			name = intrepid;
+			sourceTree = "<group>";
+		};
+		17077A67A9C8F476E6AC535E /* pickpocket */ = {
+			isa = PBXGroup;
+			children = (
+				318451B96B6732F690AFD921 /* Lock.kt */,
+				E072FAA4693B12201F2C3835 /* LockViewModel.kt */,
+				D704B537A4A3F335B8867264 /* runBlocking.kt */,
+				2608AA5F4370E6F735DE1866 /* LockApi.kt */,
+				A746F3AE30E43C44F152DA21 /* WebLock.kt */,
+				61524B4B15FA66C32F0FAA05 /* LocalLockProvider.kt */,
+				10D50FE5E082B8F7D85164D2 /* LocalLock.kt */,
+				975065504B8D123FA4C40D3F /* httpClientEngine.kt */,
+				7252D2C08F1F8A3CC82CC4AB /* MainDispatcher.kt */,
+				8F3997964A1069907D2B3127 /* WebLockProvider.kt */,
+			);
+			name = pickpocket;
+			sourceTree = "<group>";
+		};
+		1D755BB5A83E29D8251ACDEB /* intrepid */ = {
+			isa = PBXGroup;
+			children = (
+				0415A4DFB3DF8EEDE303C65E /* pickpocket */,
+			);
+			name = intrepid;
+			sourceTree = "<group>";
+		};
+		2E8B5A2ED94A474CB60860B6 /* pickpocket */ = {
+			isa = PBXGroup;
+			children = (
+				2F5F749BFB64C7AD95D5CDB5 /* runBlocking.kt */,
+				263670375D0F0618BD9A484F /* IosHelpers.kt */,
+				D28991A95C6B24BD6AF67561 /* httpClientEngine.kt */,
+				E51CC3EBDC2AF402B13D2281 /* MainDispatcher.kt */,
+			);
+			name = pickpocket;
+			sourceTree = "<group>";
+		};
+		3A2FFBF0F054F31AD6E902C3 /* iosMain */ = {
+			isa = PBXGroup;
+			children = (
+				71CE8492952909E5A01C4E5B /* kotlin */,
+			);
+			name = iosMain;
+			sourceTree = "<group>";
+		};
 		465611E921FD1F7E00409CFD /* Shared */ = {
 			isa = PBXGroup;
 			children = (
@@ -120,6 +231,7 @@
 				46E7E32B20E9A6620041145B /* PickPocKTUITests */,
 				465611E921FD1F7E00409CFD /* Shared */,
 				46E7E30A20E9A6600041145B /* Products */,
+				52EF193921D2788A8BFB46E7 /* Kotlin */,
 			);
 			sourceTree = "<group>";
 		};
@@ -164,6 +276,133 @@
 				46E7E32E20E9A6620041145B /* Info.plist */,
 			);
 			path = PickPocKTUITests;
+			sourceTree = "<group>";
+		};
+		52EF193921D2788A8BFB46E7 /* Kotlin */ = {
+			isa = PBXGroup;
+			children = (
+				3A2FFBF0F054F31AD6E902C3 /* iosMain */,
+				E401160A38CCF58595C2E22C /* commonMain */,
+				5FE612115FD3FF1BF8A88344 /* commonTest */,
+				09F2F959791529D619F080F3 /* main */,
+				6FA4C00E58ACAA9F4E92F115 /* androidMain */,
+			);
+			name = Kotlin;
+			sourceTree = "<group>";
+		};
+		5FE612115FD3FF1BF8A88344 /* commonTest */ = {
+			isa = PBXGroup;
+			children = (
+				A527BE2B3D030DC48AFD0229 /* kotlin */,
+			);
+			name = commonTest;
+			sourceTree = "<group>";
+		};
+		608B72781931BAFD814785FB /* io */ = {
+			isa = PBXGroup;
+			children = (
+				EC9E614E7364B9C19D5B3B27 /* intrepid */,
+			);
+			name = io;
+			sourceTree = "<group>";
+		};
+		652C2F6C01E5F8409FEE0CA6 /* io */ = {
+			isa = PBXGroup;
+			children = (
+				FF50D1D9C7ECEAFC68FD6279 /* intrepid */,
+			);
+			name = io;
+			sourceTree = "<group>";
+		};
+		6FA4C00E58ACAA9F4E92F115 /* androidMain */ = {
+			isa = PBXGroup;
+			children = (
+				A29195E22B9C827AF801F9D1 /* kotlin */,
+			);
+			name = androidMain;
+			sourceTree = "<group>";
+		};
+		71CE8492952909E5A01C4E5B /* kotlin */ = {
+			isa = PBXGroup;
+			children = (
+				E6CFAFA87293FB4318787F91 /* io */,
+			);
+			name = kotlin;
+			sourceTree = "<group>";
+		};
+		9234A87A421B60AABB4FBC57 /* kotlin */ = {
+			isa = PBXGroup;
+			children = (
+				608B72781931BAFD814785FB /* io */,
+			);
+			name = kotlin;
+			sourceTree = "<group>";
+		};
+		A29195E22B9C827AF801F9D1 /* kotlin */ = {
+			isa = PBXGroup;
+			children = (
+				D5B32EB76A0D2D2B7B057C34 /* io */,
+			);
+			name = kotlin;
+			sourceTree = "<group>";
+		};
+		A527BE2B3D030DC48AFD0229 /* kotlin */ = {
+			isa = PBXGroup;
+			children = (
+				652C2F6C01E5F8409FEE0CA6 /* io */,
+			);
+			name = kotlin;
+			sourceTree = "<group>";
+		};
+		BB28E39D1B6A1BF9035D1FF8 /* pickpocket */ = {
+			isa = PBXGroup;
+			children = (
+				AF3AA158CF773EBC0EC105EF /* LocalLockTest.kt */,
+				08DD588A5AEA790C29E0DDCC /* WebLockTest.kt */,
+				73E6ED9A037A39C2EB27B688 /* LockViewModelTest.kt */,
+				E3152C6E73A6A51805DBF637 /* LockClientTest.kt */,
+			);
+			name = pickpocket;
+			sourceTree = "<group>";
+		};
+		D5B32EB76A0D2D2B7B057C34 /* io */ = {
+			isa = PBXGroup;
+			children = (
+				1D755BB5A83E29D8251ACDEB /* intrepid */,
+			);
+			name = io;
+			sourceTree = "<group>";
+		};
+		E401160A38CCF58595C2E22C /* commonMain */ = {
+			isa = PBXGroup;
+			children = (
+				9234A87A421B60AABB4FBC57 /* kotlin */,
+			);
+			name = commonMain;
+			sourceTree = "<group>";
+		};
+		E6CFAFA87293FB4318787F91 /* io */ = {
+			isa = PBXGroup;
+			children = (
+				10E9424BBD1ED329A1CF97BB /* intrepid */,
+			);
+			name = io;
+			sourceTree = "<group>";
+		};
+		EC9E614E7364B9C19D5B3B27 /* intrepid */ = {
+			isa = PBXGroup;
+			children = (
+				17077A67A9C8F476E6AC535E /* pickpocket */,
+			);
+			name = intrepid;
+			sourceTree = "<group>";
+		};
+		FF50D1D9C7ECEAFC68FD6279 /* intrepid */ = {
+			isa = PBXGroup;
+			children = (
+				BB28E39D1B6A1BF9035D1FF8 /* pickpocket */,
+			);
+			name = intrepid;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -341,6 +580,27 @@
 			files = (
 				46E7E30F20E9A6600041145B /* ViewController.swift in Sources */,
 				46E7E30D20E9A6600041145B /* AppDelegate.swift in Sources */,
+				55CF3BD7AC8DF10605F99B07 /* runBlocking.kt in Sources */,
+				448D825A8C1B33EE8F5E069B /* IosHelpers.kt in Sources */,
+				FA4CE1EABD9F9694CFF2D6AF /* httpClientEngine.kt in Sources */,
+				E2F15EF964B4CC94EE751D99 /* MainDispatcher.kt in Sources */,
+				9406FDC545233B089D54F2D7 /* Lock.kt in Sources */,
+				32A2A57B46D01B99D5B150E6 /* LockViewModel.kt in Sources */,
+				66B643E8449EDCF3744B2554 /* runBlocking.kt in Sources */,
+				23E0A9CC68A512E85ECED76A /* LockApi.kt in Sources */,
+				98F2FA7F5692D9B7FAD0FB14 /* WebLock.kt in Sources */,
+				08C790DF23C34039B7455030 /* LocalLockProvider.kt in Sources */,
+				65A81AD31439EBB6FEE142AF /* LocalLock.kt in Sources */,
+				88AEFC65F2141304DBEC23F8 /* httpClientEngine.kt in Sources */,
+				C2EE00D76BEFB417C1B736B8 /* MainDispatcher.kt in Sources */,
+				2F205FD34D52A33F7E51AF52 /* WebLockProvider.kt in Sources */,
+				FD80F571856BBC79A1AFB150 /* LocalLockTest.kt in Sources */,
+				AAA2BB5A6CE51C02E54DC297 /* WebLockTest.kt in Sources */,
+				BC878F408A785871B4539025 /* LockViewModelTest.kt in Sources */,
+				BDFC3885CCFCE8AC144E2AB5 /* LockClientTest.kt in Sources */,
+				133038B7085BC55DA65F7851 /* runBlocking.kt in Sources */,
+				FF8FDF1372EEC41CB6F46DD1 /* httpClientEngine.kt in Sources */,
+				B8A3D3655C418BC56CA5B2F4 /* MainDispatcher.kt in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

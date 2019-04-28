@@ -155,3 +155,9 @@ task coverageReportAndroid(type: JacocoReport) {
 configurations {
     compileClasspath
 }
+
+apply plugin: 'co.touchlab.kotlinxcodesync'
+xcode {
+    projectPath = "../app-ios/PickpocKT.xcodeproj"
+    target = "PickpocKT"
+}
