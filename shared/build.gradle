@@ -98,12 +98,6 @@ android {
     defaultConfig {
         minSdkVersion 21
     }
-    buildTypes {
-        debug {
-            // MPP libraries don't currently get this resolution automatically
-            matchingFallbacks = ['release']
-        }
-    }
 }
 
 task copyFramework {
@@ -140,11 +134,11 @@ jacoco {
 task coverageReportAndroid(type: JacocoReport) {
     group = "verification"
     description = "Generate Jacoco coverage report."
-    classDirectories = fileTree(dir: "$buildDir/tmp/kotlin-classes/debug")
+    classDirectories.setFrom(fileTree(dir: "$buildDir/tmp/kotlin-classes/debug"))
     def coverageSourceDirs = ["src/commonMain/kotlin", "src/androidMain/kotlin"]
-    additionalSourceDirs = files(coverageSourceDirs)
-    sourceDirectories = files(coverageSourceDirs)
-    executionData = files("$buildDir/jacoco/testDebugUnitTest.exec")
+    additionalSourceDirs.setFrom(files(coverageSourceDirs))
+    sourceDirectories.setFrom(files(coverageSourceDirs))
+    executionData.setFrom(files("$buildDir/jacoco/testDebugUnitTest.exec"))
     reports {
         html.enabled = true
         xml.enabled = true
