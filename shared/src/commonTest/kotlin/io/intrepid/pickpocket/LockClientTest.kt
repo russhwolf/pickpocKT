@@ -10,7 +10,7 @@ import kotlinx.coroutines.io.ByteReadChannel
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-private val USER = "Test"
+private const val USER = "Test"
 private val REQUEST = PickLockRequest("[1,2,3]", "1234567890ABCDEF")
 
 class LockClientTest {
@@ -40,6 +40,12 @@ class LockClientTest {
     @Test
     fun `get users`() = runBlocking {
         val client = LockClient(MockEngine {
+            // Verify that we serialized our inputs correctly
+            assertEquals(
+                "https://5gbad1ceal.execute-api.us-east-1.amazonaws.com/release/users",
+                url.toString(),
+                "Passed incorrect URL!"
+            )
             MockHttpResponse(
                 call = call,
                 status = HttpStatusCode.OK,
@@ -60,7 +66,8 @@ class LockClientTest {
                     GetUsersResponse.User("Jimmy", 4)
                 )
             ),
-            result
+            result,
+            "Parsed incorrect result!"
         )
     }
 

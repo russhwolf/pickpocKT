@@ -14,6 +14,7 @@ class LockViewModel(
     private val settings: Settings,
     private val webLockProvider: WebLockProvider = WebLockProviderImpl(LockClient(httpClientEngine), settings),
     private val localLockProvider: LocalLockProvider = LocalLockProviderImpl(settings),
+    private var logger: Logger = ::println, // TODO better logging
     private var listener: ViewStateListener? = null
 ) : CoroutineScope {
 
@@ -115,8 +116,7 @@ class LockViewModel(
             }
             state = state.copy(enabled = state.locked)
         } catch (e: Throwable) {
-            // TODO logger?
-            println("Error on input! ${e.message}")
+            logger.invoke("Error on input! ${e.message}")
             state = prevState
         }
     }
@@ -220,6 +220,7 @@ private fun ViewState.Companion.load(settings: Settings): ViewState =
     )
 
 typealias ViewStateListener = (ViewState) -> Unit
+typealias Logger = (String) -> Unit
 
 data class GuessListItem(val guess: String, val numCorrect: Int, val numMisplaced: Int)
 

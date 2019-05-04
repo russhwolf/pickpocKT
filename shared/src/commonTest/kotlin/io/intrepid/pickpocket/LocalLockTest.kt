@@ -6,27 +6,29 @@ import kotlin.test.assertEquals
 class LocalLockTest {
     @Test
     fun `run all test cases`() = runBlocking {
-        for (testCase in testCases) {
-            val lock = LocalLock(testCase.code)
-            val result = lock.submitGuess(testCase.guess)
-            assertEquals(testCase.result, result, "Incorrect result for code=${testCase.code} guess=${testCase.guess}")
-        }
+        testCase(code = "123", guess = "411", numCorrect = 0, numMisplaced = 1)
+        testCase(code = "411", guess = "123", numCorrect = 0, numMisplaced = 1)
+        testCase(code = "123", guess = "114", numCorrect = 1, numMisplaced = 0)
+
+        testCase(code = "123", guess = "123", numCorrect = 3, numMisplaced = 0)
+        testCase(code = "123", guess = "456", numCorrect = 0, numMisplaced = 0)
+        testCase(code = "123", guess = "156", numCorrect = 1, numMisplaced = 0)
+        testCase(code = "123", guess = "416", numCorrect = 0, numMisplaced = 1)
+        testCase(code = "123", guess = "411", numCorrect = 0, numMisplaced = 1)
+        testCase(code = "123", guess = "114", numCorrect = 1, numMisplaced = 0)
+
+        testCase(code = "123", guess = "345", numCorrect = 0, numMisplaced = 1)
+        testCase(code = "12", guess = "23", numCorrect = 0, numMisplaced = 1)
+        testCase(code = "", guess = "", numCorrect = 0, numMisplaced = 0)
     }
 }
 
-private val testCases = listOf(
-    TestCase("123", "411", GuessResult(0, 1)),
-    TestCase("411", "123", GuessResult(0, 1)),
-    TestCase("123", "114", GuessResult(1, 0)),
-
-    TestCase("123", "123", GuessResult(3, 0)),
-    TestCase("123", "456", GuessResult(0, 0)),
-    TestCase("123", "156", GuessResult(1, 0)),
-    TestCase("123", "416", GuessResult(0, 1)),
-    TestCase("123", "411", GuessResult(0, 1)),
-    TestCase("123", "114", GuessResult(1, 0)),
-
-    TestCase("123", "345", GuessResult(0, 1))
-)
-
-private data class TestCase(val code: String, val guess: String, val result: GuessResult)
+suspend fun testCase(code: String, guess: String, numCorrect: Int, numMisplaced: Int) {
+    val lock = LocalLock(code)
+    val result = lock.submitGuess(guess)
+    assertEquals(
+        GuessResult(numCorrect = numCorrect, numMisplaced = numMisplaced),
+        result,
+        "Incorrect result for code=$code guess=$guess"
+    )
+}

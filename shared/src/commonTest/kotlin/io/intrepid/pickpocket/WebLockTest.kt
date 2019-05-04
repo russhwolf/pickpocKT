@@ -2,6 +2,8 @@ package io.intrepid.pickpocket
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
+import kotlin.test.fail
 
 class WebLockTest {
     @Test
@@ -21,14 +23,35 @@ class WebLockTest {
 
             override suspend fun getUsers(): GetUsersResponse = throw NotImplementedError()
         }
-        val lock = WebLock("Test", 3, api)
+        val lock = WebLock("Test", 3, api, "1234567890ABCDEF")
 
         val expected = GuessResult(1, 2)
         val result = lock.submitGuess("123")
 
         assertEquals("Test", verifiedUser, "User not passed correctly!")
-        assertEquals(PickLockRequest("[1,2,3]", "331f6ac6-3a63-11e7-ae72-12ad2ae1db2b"), verifiedRequest, "Request not generated correctly")
+        assertEquals(PickLockRequest("[1,2,3]", "1234567890ABCDEF"), verifiedRequest, "Request not generated correctly")
         assertEquals(expected, result, "Result not handled correctly")
     }
 
+    @Test
+    fun `report failed submit`() = runBlocking {
+        val testException = Exception("Expected Test Failure")
+        val api = object : LockApi {
+            override suspend fun pickLock(user: String, pickLockRequest: PickLockRequest): PickLockResponse {
+                throw testException
+            }
+
+            override suspend fun getUsers(): GetUsersResponse = throw NotImplementedError()
+        }
+        val lock = WebLock("Test", 3, api, "1234567890ABCDEF")
+
+        val error = try {
+            lock.submitGuess("123")
+            fail("submitGuess() should throw Exception")
+        } catch (throwable: Throwable) {
+            throwable
+        }
+
+        assertTrue(error is RuntimeException && error.cause == testException, "Unexpected error from submitGuess()")
+    }
 }

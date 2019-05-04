@@ -1,9 +1,11 @@
 package io.intrepid.pickpocket
 
 import com.russhwolf.settings.Settings
-import kotlin.test.BeforeTest
+import kotlinx.coroutines.isActive
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 private val STATE_INITIAL = ViewState(
     guess = "",
@@ -33,44 +35,78 @@ private val STATE_STARTED = ViewState(
     lockName = "MockLock (length 3)"
 )
 
+private val WEB_USERS = listOf(
+    WebLockProvider.User("Foo", 3),
+    WebLockProvider.User("Bar", 4)
+)
+
 class LockViewModelTest {
 
-    private lateinit var mockLock: MockLock
-    private lateinit var mockLocalLockProvider: MockLocalLockProvider
-    private lateinit var mockWebLockProvider: MockWebLockProvider
-    private lateinit var mockSettings: MockSettings
-    private lateinit var mockViewStateListener: MockViewStateListener
+    private val mockLock = MockLock()
+    private val mockLocalLockProvider = MockLocalLockProvider(mockLock)
+    private val mockWebLockProvider = MockWebLockProvider(mockLock)
+    private val mockSettings = MockSettings()
+    private val mockLogger: Logger = {}
+    private val mockViewStateListener = MockViewStateListener()
 
-    private lateinit var viewModel: LockViewModel
-
-    @BeforeTest
-    fun setup() {
-        mockLock = MockLock()
-        mockLocalLockProvider = MockLocalLockProvider(mockLock)
-        mockWebLockProvider = MockWebLockProvider(mockLock)
-        mockSettings = MockSettings()
-        mockViewStateListener = MockViewStateListener()
-
-        viewModel = LockViewModel(mockSettings, mockWebLockProvider, mockLocalLockProvider, mockViewStateListener)
-    }
+    private val viewModel =
+        LockViewModel(mockSettings, mockWebLockProvider, mockLocalLockProvider, mockLogger, mockViewStateListener)
 
     @Test
     fun `initial state`() {
-        mockViewStateListener.expect(STATE_INITIAL)
+        mockViewStateListener.expect(STATE_INITIAL, "ViewModel should have expected initial state")
+    }
+
+    @Test
+    fun `launch local selector`() {
+        viewModel.startLocal()
+
+        mockViewStateListener.expect(
+            STATE_INITIAL.copy(localConfigVisible = true),
+            "Start local should launch local config"
+        )
+    }
+
+    @Test
+    fun `launch web selector`() = runBlocking {
+        viewModel.startWeb()
+
+        mockViewStateListener.expect(
+            STATE_INITIAL.copy(webUsers = WEB_USERS),
+            "Start web should show web users"
+        )
     }
 
     @Test
     fun `start game local`() {
+        viewModel.startLocal()
         viewModel.selectLocalLength("3")
 
-        mockViewStateListener.expect(STATE_STARTED)
+        mockViewStateListener.expect(STATE_STARTED, "Valid local length should start local game")
+    }
+
+    @Test
+    fun `invalid start local`() {
+        viewModel.startLocal()
+        viewModel.selectLocalLength("F")
+
+        mockViewStateListener.expect(STATE_INITIAL, "Invalid local length should reset")
     }
 
     @Test
     fun `start game web`() = runBlocking {
+        viewModel.startWeb()
         viewModel.selectWebUser(WebLockProvider.User("Test", 3))
 
-        mockViewStateListener.expect(STATE_STARTED.copy(mode = Mode.WEB))
+        mockViewStateListener.expect(STATE_STARTED.copy(mode = Mode.WEB), "Valid web user should start web game")
+    }
+
+    @Test
+    fun `invalid start web`() = runBlocking {
+        viewModel.startWeb()
+        viewModel.selectWebUser(null)
+
+        mockViewStateListener.expect(STATE_INITIAL, "Invalid web user should reset")
     }
 
     @Test
@@ -78,7 +114,7 @@ class LockViewModelTest {
         viewModel.selectLocalLength("3")
         viewModel.input('3')
 
-        mockViewStateListener.expect(STATE_STARTED.copy(guess = "3"))
+        mockViewStateListener.expect(STATE_STARTED.copy(guess = "3"), "First input should update guess state")
     }
 
     @Test
@@ -99,7 +135,8 @@ class LockViewModelTest {
                         numMisplaced = 1
                     )
                 )
-            )
+            ),
+            "Complete input should evaluate guess"
         )
     }
 
@@ -148,7 +185,8 @@ class LockViewModelTest {
                 webUsers = null,
                 mode = null,
                 lockName = "MockLock (length 3)"
-            )
+            ),
+            "Correct guess should show expected win state"
         )
     }
 
@@ -161,7 +199,10 @@ class LockViewModelTest {
         viewModel.input('2')
         viewModel.input('3')
 
-        mockViewStateListener.expect(STATE_STARTED.copy(mode = Mode.WEB, guess = "12"))
+        mockViewStateListener.expect(
+            STATE_STARTED.copy(mode = Mode.WEB, guess = "12"),
+            "Web guess failure should undo last input"
+        )
     }
 
     @Test
@@ -170,7 +211,7 @@ class LockViewModelTest {
         viewModel.input('3')
         viewModel.reset()
 
-        mockViewStateListener.expect(STATE_INITIAL)
+        mockViewStateListener.expect(STATE_INITIAL, "Reset action should reinitialize mid-game state")
     }
 
     @Test
@@ -182,25 +223,42 @@ class LockViewModelTest {
         viewModel.input('3')
         viewModel.reset()
 
-        mockViewStateListener.expect(STATE_INITIAL)
+        mockViewStateListener.expect(STATE_INITIAL, "Reset action should reinitialize post-game state")
     }
 
     @Test
     fun `set new listener`() {
         val mockStateListener2 = MockViewStateListener()
 
-        mockViewStateListener.expect(STATE_INITIAL)
-        mockStateListener2.expect(null)
+        mockViewStateListener.expect(STATE_INITIAL, "Original listener should see initial state")
+        mockStateListener2.expect(null, "New listener should see no state before set")
 
         viewModel.setListener(mockStateListener2)
 
-        mockViewStateListener.expect(STATE_INITIAL)
-        mockStateListener2.expect(STATE_INITIAL)
+        mockViewStateListener.expect(STATE_INITIAL, "Original listener should be unchanged after new listener set")
+        mockStateListener2.expect(STATE_INITIAL, "New listener should see current state after set")
 
         viewModel.selectLocalLength("3")
 
-        mockViewStateListener.expect(STATE_INITIAL)
-        mockStateListener2.expect(STATE_STARTED)
+        mockViewStateListener.expect(STATE_INITIAL, "Original listener should receive no update")
+        mockStateListener2.expect(STATE_STARTED, "New listener should receive updated state")
+    }
+
+    @Test
+    fun `ViewModel lifecycle`() {
+        assertTrue(
+            viewModel.coroutineContext.isActive,
+            "Initialized ViewModel should have active coroutineContext"
+        )
+        viewModel.deinit()
+        assertFalse(
+            viewModel.coroutineContext.isActive,
+            "ViewModel should have inactive coroutineContext after deinit()"
+        )
+
+        // Listener no longer receives updates
+        viewModel.selectLocalLength("3")
+        mockViewStateListener.expect(STATE_INITIAL, "Listener should receive no updates after deinit()")
     }
 }
 
@@ -221,7 +279,7 @@ private class MockWebLockProvider(var lock: Lock) : WebLockProvider {
 
     override fun newLock(user: WebLockProvider.User): Lock = lock
 
-    override suspend fun getUsers(): List<WebLockProvider.User> = throw NotImplementedError()
+    override suspend fun getUsers(): List<WebLockProvider.User> = WEB_USERS
 }
 
 private class MockLock : Lock {
@@ -258,8 +316,8 @@ private class MockViewStateListener : ViewStateListener {
         this.state = p1
     }
 
-    fun expect(expectedState: ViewState?) {
-        assertEquals(expectedState, state, "Received unexpected state!")
+    fun expect(expectedState: ViewState?, message: String) {
+        assertEquals(expectedState, state, "Received unexpected state! $message")
     }
 }
 
