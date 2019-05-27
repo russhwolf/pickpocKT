@@ -16,10 +16,16 @@ kotlin {
     android()
 
     sourceSets {
-        def coroutine_version = "1.2.0"
+        all {
+            languageSettings {
+                useExperimentalAnnotation('kotlin.Experimental')
+            }
+        }
+        
+        def coroutine_version = "1.2.1"
         def serialization_version = "0.11.0"
-        def ktor_version = "1.1.4"
-        def settings_version = "0.3"
+        def ktor_version = "1.2.0"
+        def settings_version = "0.3.1"
         commonMain {
             dependencies {
                 implementation "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
@@ -30,6 +36,7 @@ kotlin {
 
                 implementation "io.ktor:ktor-client-core:$ktor_version"
                 implementation "io.ktor:ktor-client-json:$ktor_version"
+                implementation "io.ktor:ktor-client-serialization:$ktor_version"
                 
                 implementation "com.russhwolf:multiplatform-settings:$settings_version"
             }
@@ -41,9 +48,10 @@ kotlin {
 
                 implementation "io.ktor:ktor-client-core:$ktor_version"
                 implementation "io.ktor:ktor-client-json:$ktor_version"
+                implementation "io.ktor:ktor-client-serialization:$ktor_version"
                 implementation "io.ktor:ktor-client-mock:$ktor_version"
 
-                implementation "com.russhwolf:multiplatform-settings:$settings_version"
+                implementation "com.russhwolf:multiplatform-settings-test:$settings_version"
             }
         }
 
@@ -59,15 +67,22 @@ kotlin {
                 implementation "io.ktor:ktor-client-android:$ktor_version"
                 implementation "io.ktor:ktor-client-core-jvm:$ktor_version"
                 implementation "io.ktor:ktor-client-json-jvm:$ktor_version"
+                implementation "io.ktor:ktor-client-serialization-jvm:$ktor_version"
             }
         }
         androidTest {
             dependencies {
                 implementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
 
+                implementation "io.ktor:ktor-client-mock-jvm:$ktor_version"
+
+                // TODO below dependencies can be removed after KT-29343 is fixed
                 implementation "io.ktor:ktor-client-core-jvm:$ktor_version"
                 implementation "io.ktor:ktor-client-json-jvm:$ktor_version"
-                implementation "io.ktor:ktor-client-mock-jvm:$ktor_version"
+                implementation "io.ktor:ktor-client-serialization-jvm:$ktor_version"
+
+                implementation "com.russhwolf:multiplatform-settings:$settings_version"
+                implementation "com.russhwolf:multiplatform-settings-test:$settings_version"
             }
         }
 
@@ -80,6 +95,7 @@ kotlin {
                 implementation "io.ktor:ktor-client-ios:$ktor_version"
                 implementation "io.ktor:ktor-client-core-native:$ktor_version"
                 implementation "io.ktor:ktor-client-json-native:$ktor_version"
+                implementation "io.ktor:ktor-client-serialization-native:$ktor_version"
             }
         }
         iosTest {

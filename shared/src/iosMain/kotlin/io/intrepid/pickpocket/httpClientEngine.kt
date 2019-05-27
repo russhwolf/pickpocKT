@@ -1,7 +1,6 @@
 package io.intrepid.pickpocket
 
 import io.ktor.client.engine.HttpClientEngine
-import io.ktor.client.engine.ios.IosClientEngine
-import io.ktor.client.engine.ios.IosClientEngineConfig
+import io.ktor.client.engine.ios.Ios
 
-actual val httpClientEngine: HttpClientEngine = IosClientEngine(IosClientEngineConfig())
+actual val httpClientEngine: HttpClientEngine = Ios.create()

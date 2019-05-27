@@ -1,5 +1,6 @@
 package io.intrepid.pickpocket
 
+import com.russhwolf.settings.MockSettings
 import com.russhwolf.settings.Settings
 import kotlinx.coroutines.isActive
 import kotlin.test.Test
@@ -319,24 +320,5 @@ private class MockViewStateListener : ViewStateListener {
     fun expect(expectedState: ViewState?, message: String) {
         assertEquals(expectedState, state, "Received unexpected state! $message")
     }
-}
-
-// TODO Mock this better in order to test save/load logic
-private class MockSettings : Settings {
-    override fun clear() = Unit
-    override fun getBoolean(key: String, defaultValue: Boolean): Boolean = defaultValue
-    override fun getDouble(key: String, defaultValue: Double): Double = defaultValue
-    override fun getFloat(key: String, defaultValue: Float): Float = defaultValue
-    override fun getInt(key: String, defaultValue: Int): Int = defaultValue
-    override fun getLong(key: String, defaultValue: Long): Long = defaultValue
-    override fun getString(key: String, defaultValue: String): String = defaultValue
-    override fun hasKey(key: String): Boolean = false
-    override fun putBoolean(key: String, value: Boolean) = Unit
-    override fun putDouble(key: String, value: Double) = Unit
-    override fun putFloat(key: String, value: Float) = Unit
-    override fun putInt(key: String, value: Int) = Unit
-    override fun putLong(key: String, value: Long) = Unit
-    override fun putString(key: String, value: String) = Unit
-    override fun remove(key: String) = Unit
 }
 

@@ -1,11 +1,12 @@
 package io.intrepid.pickpocket
 
 import io.ktor.client.engine.mock.MockEngine
-import io.ktor.client.engine.mock.MockHttpResponse
+import io.ktor.client.engine.mock.respond
 import io.ktor.content.TextContent
 import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
+import io.ktor.util.InternalAPI
 import kotlinx.coroutines.io.ByteReadChannel
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -13,6 +14,7 @@ import kotlin.test.assertEquals
 private const val USER = "Test"
 private val REQUEST = PickLockRequest("[1,2,3]", "1234567890ABCDEF")
 
+@UseExperimental(InternalAPI::class)
 class LockClientTest {
 
     @Test
@@ -39,19 +41,18 @@ class LockClientTest {
 
     @Test
     fun `get users`() = runBlocking {
-        val client = LockClient(MockEngine {
+        val client = LockClient(MockEngine { request ->
             // Verify that we serialized our inputs correctly
             assertEquals(
                 "https://5gbad1ceal.execute-api.us-east-1.amazonaws.com/release/users",
-                url.toString(),
+                request.url.toString(),
                 "Passed incorrect URL!"
             )
-            MockHttpResponse(
-                call = call,
-                status = HttpStatusCode.OK,
+            respond(
                 content = ByteReadChannel(
                     """{"result":[{"userId":"JackBlack","combinationLength":4},{"userId":"Paul","combinationLength":3},{"userId":"JohnM","combinationLength":4},{"userId":"Jimmy","combinationLength":4}]}"""
                 ),
+                status = HttpStatusCode.OK,
                 headers = Headers.build { set(HttpHeaders.ContentType, "application/json") }
             )
         })
@@ -71,22 +72,21 @@ class LockClientTest {
         )
     }
 
-    private fun mockPickLockEngine(close: Int, correct: Int) = MockEngine {
+    private fun mockPickLockEngine(close: Int, correct: Int) = MockEngine { request ->
         // Verify that we serialized our inputs correctly
         assertEquals(
             "https://5gbad1ceal.execute-api.us-east-1.amazonaws.com/release/picklock/Test",
-            url.toString(),
+            request.url.toString(),
             "Passed incorrect URL!"
         )
         assertEquals(
             """{"guess":"[1,2,3]","token":"1234567890ABCDEF"}""",
-            (content as TextContent).text,
+            (request.body as TextContent).text,
             "Passed incorrect body!"
         )
-        MockHttpResponse(
-            call = call,
-            status = HttpStatusCode.OK,
+        respond(
             content = ByteReadChannel("""{"result": {"close": $close, "correct": $correct}}"""),
+            status = HttpStatusCode.OK,
             headers = Headers.build { set(HttpHeaders.ContentType, "application/json") }
         )
     }
