@@ -43,7 +43,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         guessList?.delegate = self
         guessList?.dataSource = self
 
-        viewModel.setListener(listener: { (state: ViewState) -> KotlinUnit in
+        viewModel.setListener(listener: { (state: ViewState) -> Void in
             self.resetButton?.alpha = state.resetButtonVisible ? 1 : 0
             self.startLocalButton?.alpha = state.startButtonsVisible ? 1 : 0
             self.startWebButton?.alpha = state.startButtonsVisible ? 1 : 0
@@ -81,8 +81,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 self.usersDialog?.dismiss(animated: true, completion: nil)
                 self.usersDialog = nil
             }
-            
-            return KotlinUnit()
         })
     }
 

@@ -22,10 +22,10 @@ kotlin {
             }
         }
         
-        def coroutine_version = "1.2.1"
-        def serialization_version = "0.11.0"
-        def ktor_version = "1.2.0"
-        def settings_version = "0.3.1"
+        def coroutine_version = "1.2.2"
+        def serialization_version = "0.11.1"
+        def ktor_version = "1.2.2"
+        def settings_version = "0.3.2"
         commonMain {
             dependencies {
                 implementation "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
@@ -133,11 +133,11 @@ task copyFramework {
     }
 }
 
-task iosTest(dependsOn: 'linkTestDebugExecutableIos') {
+task iosTest(dependsOn: 'linkDebugTestIos') {
     doLast {
-        def binary = kotlin.targets.ios.compilations.test.getBinary('EXECUTABLE', 'DEBUG')
+        def testBinaryPath = kotlin.targets.ios.binaries.getTest('DEBUG').outputFile.absolutePath
         exec {
-            commandLine 'xcrun', 'simctl', 'spawn', "iPhone Xʀ", binary.absolutePath
+            commandLine 'xcrun', 'simctl', 'spawn', "iPhone Xʀ", testBinaryPath
         }
     }
 }
